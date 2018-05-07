@@ -5,10 +5,13 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './signup.component.html'
 })
 export class SignupComponent implements OnInit {
+  constructor() {}
+  genders = [
+    { value: 'male', viewValue: 'Male' },
+    { value: 'female', viewValue: 'Female' }
+  ];
 
-  constructor() { }
+  value = '';
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
