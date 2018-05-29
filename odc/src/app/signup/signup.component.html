@@ -1,35 +1,93 @@
-<mat-card class="no-pad">
-  <mat-card-header>
-    <mat-card-title>Signup!</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form class="form-container col-md-6">
-      <mat-form-field>
-        <input matInput placeholder="First Name">
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="Last Name">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-select placeholder="Gender">
-          <mat-option *ngFor="let gender of genders" [value]="gender.value">
-            {{ gender.viewValue }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <!-- <input matInput placeholder="Input"> -->
-        <input matInput [matDatepicker]="picker" placeholder="Birthdate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="Email">
-      </mat-form-field>
+<mat-horizontal-stepper linear="true" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Create a login!</ng-template>
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-xl-6">
+          <input matInput placeholder="Email" formControlName="email" required>
+        </mat-form-field>
+        <mat-form-field class="odc-full-width col-xl-6">
+          <input matInput placeholder="Enter your password" formControlName="password" [type]="hide ? 'password' : 'text'" required>
+          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="align-right">
+        <button mat-button matStepperNext>Next</button>
+      </div>
     </form>
-  </mat-card-content>
-</mat-card>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Fill out your address</ng-template>
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-sm-6">
+          <input matInput placeholder="First name" formControlName="firstName" required>
+        </mat-form-field>
+
+        <mat-form-field class="odc-full-width col-sm-6">
+          <input matInput placeholder="Last Name" formControlName="lastName" required>
+        </mat-form-field>
+      </div>
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-sm-12">
+          <mat-select placeholder="Gender">
+            <mat-option *ngFor="let gender of genders" [value]="gender.value">
+              {{ gender.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-sm-12">
+          <input matInput [matDatepicker]="picker" placeholder="Birthdate" formControlName="birthDate" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-sm-12">
+          <mat-select placeholder="Are you a UVa Student?">
+            <mat-option *ngFor="let studentOption of studentOptions" [value]="studentOption.value">
+              {{ studentOption.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-sm-12">
+          <input matInput placeholder="Address" formControlName="address" required>
+        </mat-form-field>
+      </div>
+
+      <div class="odc-full-width row">
+        <mat-form-field class="odc-full-width col-sm-4">
+          <input matInput placeholder="City" formControlName="city" required>
+        </mat-form-field>
+
+        <mat-form-field class="odc-full-width col-sm-4">
+          <input matInput placeholder="State" formControlName="state" required>
+        </mat-form-field>
+
+        <mat-form-field class="odc-full-width col-sm-4">
+          <input matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
+          <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
