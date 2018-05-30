@@ -31,3 +31,11 @@ p {
 .align-right {
   text-align: right;
 }
+
+.float-right {
+  float: right;
+}
+
+table {
+  width: 100%;
+}

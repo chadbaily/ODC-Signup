@@ -1,7 +1,8 @@
-<mat-horizontal-stepper linear="true" #stepper>
+<mat-horizontal-stepper linear="false" #stepper>
+  <!-- Change to true for real site -->
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Create a login!</ng-template>
+      <ng-template matStepLabel>Create a login</ng-template>
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-xl-6">
           <input matInput placeholder="Email" formControlName="email" required>
@@ -30,7 +31,7 @@
       </div>
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-sm-12">
-          <mat-select placeholder="Gender">
+          <mat-select placeholder="Gender" formControlName="gender" required>
             <mat-option *ngFor="let gender of genders" [value]="gender.value">
               {{ gender.viewValue }}
             </mat-option>
@@ -48,7 +49,7 @@
 
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-sm-12">
-          <mat-select placeholder="Are you a UVa Student?">
+          <mat-select placeholder="Are you a UVa Student?" formControlName="student" required>
             <mat-option *ngFor="let studentOption of studentOptions" [value]="studentOption.value">
               {{ studentOption.viewValue }}
             </mat-option>
@@ -76,18 +77,61 @@
           <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
         </mat-form-field>
       </div>
-      <div class="row">
+      <div>
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button matStepperNext class="float-right">Next</button>
       </div>
     </form>
   </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
+  <mat-step [stepControl]="thirdFormGroup">
+    <ng-template matStepLabel>Sign the waiver</ng-template>
+    <mat-card>
+      <mat-card-title>
+        <strong>
+          INDEMNIFICATION AGREEMENT
+        </strong>
+      </mat-card-title>
+      <mat-card-content>
+        <p>
+          In consideration of the benefits received from being a member of Outdoors at UVa, Ltd. and participating in its activities,
+          I agree for myself, my personal representatives, heirs, and assigns, as follows:
+          <br> I understand that the outdoor activities sponsored by Outdoors at UVa, Ltd. involve risk of serious bodily injury
+          and even death. I understand and recognize that there are dangers and risks involved in outdoor activities, which
+          often occur at locations that are both distant from and inaccessible to doctors, hospitals, and emergency medical
+          care. The activities often take place on rough terrain where there is a lack of shelter from inclement weather,
+          including thunderstorms, snow, freezing temperatures, high temperatures, and high humidity, all of which are subject
+          to sudden and unforecasted changes.
+          <br> Some of the activities, such as canoeing, rafting, rock climbing, wilderness hiking, mountain biking, trail running,
+          backpacking, kayaking, caving, skiing, snowboarding, and others are inherently dangerous.
+          <br> I understand and recognize the risks described above and that other unidentified risks may exist, when I engage
+          in Outdoors at UVa, Ltd. sponsored activities. I assume the risks of injury and death arising from my participation
+          in these activities.
+          <br> I agree to indemnify and hold harmless Outdoors at UVa, Ltd., its directors, officers, and agents from liability
+          arising from my injury or death arising from my participation in Outdoors at UVa, Ltd. activities.
+          <br>
+          <strong>BY SIGNING BELOW, I ACKNOWLEDGE THAT I HAVE READ, UNDERSTOOD, AND VOLUNTARILY SIGNED THIS INDEMNIFICATION AGREEMENT
+            AND AGREE TO BE BOUND BY ITS TERMS. I UNDERSTAND THAT THIS IS A LEGAL AND ENFORCEABLE AGREEMENT.</strong>
+        </p>
+        <form [formGroup]="thirdFormGroup">
+          <mat-checkbox required formControlName="waiver">I have read and agree to the terms and conditions above</mat-checkbox>
+        </form>
+      </mat-card-content>
+      <mat-card-actions class="row">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext class="float-right">Next</button>
+      </mat-card-actions>
+    </mat-card>
+    <!-- <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div> -->
+  </mat-step>
+  <mat-step [stepControl]="fourthFormGroup">
+    <ng-template matStepLabel>Select a plan</ng-template>
     You are now done.
     <div>
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>
