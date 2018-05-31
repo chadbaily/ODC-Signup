@@ -39,3 +39,7 @@ p {
 table {
   width: 100%;
 }
+
+.center-card {
+  margin: auto;
+}
