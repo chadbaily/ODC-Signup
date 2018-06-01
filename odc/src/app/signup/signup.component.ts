@@ -56,8 +56,8 @@ export class SignupComponent implements OnInit, AfterViewChecked {
   ];
 
   memberships = [
-    { value: 'semester', viewValue: 'Semester (5-Month) Membership ($30)' },
-    { value: 'year', viewValue: 'Yearly (12-month) Membership ($50)' }
+    { value: '30', viewValue: 'Semester (5-Month) Membership ($30)' },
+    { value: '50', viewValue: 'Yearly (12-month) Membership ($50)' }
   ];
 
   ngOnInit() {
