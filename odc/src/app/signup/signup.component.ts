@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+declare let paypal: any;
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html'
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, AfterViewChecked {
   constructor(private _formBuilder: FormBuilder) {}
 
   value = '';
@@ -14,6 +16,34 @@ export class SignupComponent implements OnInit {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
+
+  addScript = false;
+  paypalLoad = true;
+
+  finalAmount = 1;
+
+  paypalConfig = {
+    env: 'sandbox',
+    client: {
+      sandbox: 'ASsvtSXZ-ArchEyp6Xc_1NvCwWScYS-Yr9Irf6zksGZC10k3x2WyO_smWlg2rz3DWjN-9GkLiksWyHZ_',
+      production: 'ASaKxdUN0sDGSQGRM8uKeYHsKW0ecsBbqW8mw0rTneq7QECwcCm9bxdV0qKpuSIy-frnkF9eoczgmep8'
+    },
+    commit: true,
+    payment: (data, actions) => {
+      return actions.payment.create({
+        payment: {
+          transactions: [
+            { amount: { total: this.finalAmount, currency: 'USD' } }
+          ]
+        }
+      });
+    },
+    onAuthorize: (data, actions) => {
+      return actions.payment.execute().then(payment => {
+        // Do something when payment is successful.
+      });
+    }
+  };
 
   genders = [
     { value: 'male', viewValue: 'Male' },
@@ -58,5 +88,24 @@ export class SignupComponent implements OnInit {
     if (this.fourthFormGroup.valid) {
       console.log('Form Submitted!');
     }
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this.addScript) {
+      this.addPaypalScript().then(() => {
+        paypal.Button.render(this.paypalConfig, '#paypal-checkout-btn');
+        this.paypalLoad = false;
+      });
+    }
+  }
+
+  addPaypalScript() {
+    this.addScript = true;
+    return new Promise((resolve, reject) => {
+      const scripttagElement = document.createElement('script');
+      scripttagElement.src = 'https://www.paypalobjects.com/api/checkout.js';
+      scripttagElement.onload = resolve;
+      document.body.appendChild(scripttagElement);
+    });
   }
 }
