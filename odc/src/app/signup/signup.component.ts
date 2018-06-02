@@ -1,14 +1,31 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Time } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 declare let paypal: any;
+
+export interface User {
+  firstName: string;
+  lastName: string;
+  gender: string;
+  student: string;
+  dob: Date;
+  email: string;
+  password: string;
+  street: string;
+  city: string;
+  zip: string;
+  phoneNumber: string;
+  Membership: string;
+}
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html'
 })
 export class SignupComponent implements OnInit, AfterViewChecked {
-  constructor(private _formBuilder: FormBuilder) {}
+  constructor(private _formBuilder: FormBuilder, private router: Router) {}
 
   value = '';
   hide = true;
@@ -16,6 +33,7 @@ export class SignupComponent implements OnInit, AfterViewChecked {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
+  public data: User;
 
   addScript = false;
   paypalLoad = true;
@@ -25,8 +43,10 @@ export class SignupComponent implements OnInit, AfterViewChecked {
   paypalConfig = {
     env: 'sandbox',
     client: {
-      sandbox: 'ASsvtSXZ-ArchEyp6Xc_1NvCwWScYS-Yr9Irf6zksGZC10k3x2WyO_smWlg2rz3DWjN-9GkLiksWyHZ_',
-      production: 'ASaKxdUN0sDGSQGRM8uKeYHsKW0ecsBbqW8mw0rTneq7QECwcCm9bxdV0qKpuSIy-frnkF9eoczgmep8'
+      sandbox:
+        'ASsvtSXZ-ArchEyp6Xc_1NvCwWScYS-Yr9Irf6zksGZC10k3x2WyO_smWlg2rz3DWjN-9GkLiksWyHZ_',
+      production:
+        'ASaKxdUN0sDGSQGRM8uKeYHsKW0ecsBbqW8mw0rTneq7QECwcCm9bxdV0qKpuSIy-frnkF9eoczgmep8'
     },
     commit: true,
     payment: (data, actions) => {
@@ -40,7 +60,7 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then(payment => {
-        // Do something when payment is successful.
+        this.router.navigate(['thank-you']);
       });
     }
   };
@@ -60,36 +80,6 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     { value: '50', viewValue: 'Yearly (12-month) Membership ($50)' }
   ];
 
-  ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      gender: ['', Validators.required],
-      birthDate: ['', Validators.required],
-      student: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      zip: ['', Validators.required]
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      waiver: ['', Validators.required]
-    });
-    this.fourthFormGroup = this._formBuilder.group({
-      plan: ['', Validators.required]
-    });
-  }
-
-  onSubmit() {
-    if (this.fourthFormGroup.valid) {
-      console.log('Form Submitted!');
-    }
-  }
-
   ngAfterViewChecked(): void {
     if (!this.addScript) {
       this.addPaypalScript().then(() => {
@@ -106,6 +96,48 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       scripttagElement.src = 'https://www.paypalobjects.com/api/checkout.js';
       scripttagElement.onload = resolve;
       document.body.appendChild(scripttagElement);
+    });
+  }
+
+  createDataModel() {
+    this.data = {
+      firstName: this.secondFormGroup.get('firstName').value,
+      lastName: this.secondFormGroup.get('lastName').value,
+      gender: this.secondFormGroup.get('gender').value,
+      student: this.secondFormGroup.get('student').value,
+      dob: this.secondFormGroup.get('birthDate').value,
+      email: this.firstFormGroup.get('email').value,
+      password: this.firstFormGroup.get('password').value,
+      street: this.secondFormGroup.get('street').value,
+      city: this.secondFormGroup.get('city').value,
+      zip: this.secondFormGroup.get('zip').value,
+      phoneNumber: this.secondFormGroup.get('phoneNumber').value,
+      Membership: this.fourthFormGroup.get('plan').value
+    };
+  }
+
+  ngOnInit() {
+    this.firstFormGroup = this._formBuilder.group({
+      email: [null, Validators.required],
+      password: [null, Validators.required]
+    });
+    this.secondFormGroup = this._formBuilder.group({
+      firstName: [null, Validators.required],
+      lastName: [null, Validators.required],
+      gender: [null, Validators.required],
+      birthDate: [null, Validators.required],
+      student: [null, Validators.required],
+      street: [null, Validators.required],
+      city: [null, Validators.required],
+      state: [null, Validators.required],
+      zip: [null, Validators.required],
+      phoneNumber: [null, Validators.required]
+    });
+    this.thirdFormGroup = this._formBuilder.group({
+      waiver: [null, Validators.required]
+    });
+    this.fourthFormGroup = this._formBuilder.group({
+      plan: [null, Validators.required]
     });
   }
 }
