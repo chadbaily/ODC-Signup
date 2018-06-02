@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { SignupComponent } from './signup/signup.component';
@@ -10,9 +12,15 @@ import { SignupComponent } from './signup/signup.component';
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './/app-routing.module';
 import { ThankYouComponent } from './thank-you/thank-you.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
-  declarations: [AppComponent, SignupComponent, ThankYouComponent],
+  declarations: [
+    AppComponent,
+    SignupComponent,
+    ThankYouComponent,
+    LoginComponent
+  ],
   imports: [
     BrowserModule,
     FormsModule,
@@ -20,7 +28,9 @@ import { ThankYouComponent } from './thank-you/thank-you.component';
     NoopAnimationsModule,
     AppRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
