@@ -14,7 +14,6 @@ export class LoginComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  // Angular 2 Life Cycle event when component has been initialized
   ngOnInit() {
     this.getAllPeople();
   }

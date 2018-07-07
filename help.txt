@@ -1,2 +1,20 @@
 https://medium.com/@tiangolo/angular-in-docker-with-nginx-supporting-environments-built-with-multi-stage-docker-builds-bb9f1724e984
 https://scotch.io/tutorials/create-a-mean-app-with-angular-2-and-docker-compose#docker-compose
+
+Build Angular server:
+docker build -t angular-client:dev .
+docker run --name angular-client -p 4200:4200 angular-client:dev
+
+Build and run express server:
+docker build -t express-server:dev .
+docker run --name express-server -p 3000:3000 express-server:dev
+
+Mongo:
+docker run --name mongodb -p 27017:27017 mongo
+
+
+Build a new compose:
+docker-compose up --build 
+
+Delete un-used things:
+docker system prune -a
