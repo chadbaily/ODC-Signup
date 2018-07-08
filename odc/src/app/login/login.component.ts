@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Membership } from '../dataAccess.service';
 
 @Component({
   selector: 'app-login',
@@ -19,10 +20,40 @@ export class LoginComponent implements OnInit {
   }
 
   // Add one person to the API
-  addPerson(name, age) {
-    this.http.post(`${this.API}/users`, { name, age }).subscribe(() => {
-      this.getAllPeople();
-    });
+  addPerson(
+    email,
+    password,
+    firstName,
+    lastName,
+    gender,
+    birthDate,
+    uvaStudent,
+    addrStreet,
+    addrCity,
+    addrZip,
+    phoneNumber,
+    hasAggreedToWaiver,
+    membership: Membership
+  ) {
+    this.http
+      .post(`${this.API}/users`, {
+        email,
+        password,
+        firstName,
+        lastName,
+        gender,
+        birthDate,
+        uvaStudent,
+        addrStreet,
+        addrCity,
+        addrZip,
+        phoneNumber,
+        hasAggreedToWaiver,
+        membership
+      })
+      .subscribe(() => {
+        this.getAllPeople();
+      });
   }
 
   // Get all users from the API

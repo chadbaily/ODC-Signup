@@ -2,38 +2,31 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { Time } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataAccessService, UserProfile } from '../dataAccess.service';
+import { HttpClient } from '@angular/common/http';
 
 declare let paypal: any;
-
-export interface User {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  student: string;
-  dob: Date;
-  email: string;
-  password: string;
-  street: string;
-  city: string;
-  zip: string;
-  phoneNumber: string;
-  Membership: string;
-}
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html'
 })
 export class SignupComponent implements OnInit, AfterViewChecked {
-  constructor(private _formBuilder: FormBuilder, private router: Router) {}
+  constructor(
+    private _formBuilder: FormBuilder,
+    private router: Router,
+    private dataAccess: DataAccessService,
+    private http: HttpClient
+  ) {}
 
+  API = 'http://localhost:3000';
   value = '';
   hide = true;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
-  public data: User;
+  public data: UserProfile;
 
   addScript = false;
   paypalLoad = true;
@@ -60,6 +53,10 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then(payment => {
+        this.createDataModel();
+        this.http
+          .post(`${this.API}/users`, this.data)
+          .subscribe(() => console.log('Added User!'));
         this.router.navigate(['thank-you']);
       });
     }
@@ -101,18 +98,23 @@ export class SignupComponent implements OnInit, AfterViewChecked {
 
   createDataModel() {
     this.data = {
+      email: this.firstFormGroup.get('email').value,
+      password: this.firstFormGroup.get('password').value,
       firstName: this.secondFormGroup.get('firstName').value,
       lastName: this.secondFormGroup.get('lastName').value,
       gender: this.secondFormGroup.get('gender').value,
-      student: this.secondFormGroup.get('student').value,
-      dob: this.secondFormGroup.get('birthDate').value,
-      email: this.firstFormGroup.get('email').value,
-      password: this.firstFormGroup.get('password').value,
-      street: this.secondFormGroup.get('street').value,
-      city: this.secondFormGroup.get('city').value,
-      zip: this.secondFormGroup.get('zip').value,
+      birthDate: this.secondFormGroup.get('birthDate').value,
+      uvaStudent: this.secondFormGroup.get('student').value,
+      addrStreet: this.secondFormGroup.get('street').value,
+      addrCity: this.secondFormGroup.get('city').value,
+      addrZip: this.secondFormGroup.get('zip').value,
       phoneNumber: this.secondFormGroup.get('phoneNumber').value,
-      Membership: this.fourthFormGroup.get('plan').value
+      membershipType: {
+        pricePaid: this.fourthFormGroup.get('plan').value,
+        type: 'test'
+      },
+      hasAgreedToWaiver: this.thirdFormGroup.get('waiver').value,
+      agreedToWaiverTime: new Date()
     };
   }
 

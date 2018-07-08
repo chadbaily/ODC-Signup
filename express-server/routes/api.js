@@ -38,12 +38,6 @@ const User = mongoose.model('User', userSchema);
 /* GET api listing. */
 router.get('/', (req, res) => {
   res.send('api works');
-
-  User.find({}, (err, users) => {
-    if (err) res.status(500).send(error);
-
-    res.status(200).json(users);
-  });
 });
 
 /* GET all users. */
