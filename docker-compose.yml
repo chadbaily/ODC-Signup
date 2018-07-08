@@ -3,10 +3,10 @@ version: '2' # specify docker-compose version
 # Define the services/containers to be run
 services:
   # If you want live refresh, then comment out and run natively
-  angular: # name of the first service
-    build: odc # specify the directory of the Dockerfile
-    ports:
-      - "4200:4200" # specify port forewarding
+  # angular: # name of the first service
+  #   build: odc # specify the directory of the Dockerfile
+  #   ports:
+  #     - "4200:4200" # specify port forewarding
 
   express: #name of the second service
     build: express-server # specify the directory of the Dockerfile

@@ -10,17 +10,19 @@ import { AppComponent } from './app.component';
 import { SignupComponent } from './signup/signup.component';
 
 import { MaterialModule } from './material.module';
-import { AppRoutingModule } from './/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { DataAccessService } from './dataAccess.service';
 import { ThankYouComponent } from './thank-you/thank-you.component';
-import { LoginComponent } from './login/login.component';
+import { ActivateComponent } from './activate/activate.component';
+import { PersonDisplayComponent } from './person-display/person-display.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignupComponent,
     ThankYouComponent,
-    LoginComponent
+    ActivateComponent,
+    PersonDisplayComponent
   ],
   imports: [
     BrowserModule,

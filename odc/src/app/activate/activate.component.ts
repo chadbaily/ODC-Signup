@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Membership } from '../dataAccess.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html'
+  selector: 'app-activate',
+  templateUrl: './activate.component.html'
 })
-export class LoginComponent implements OnInit {
+export class ActivateComponent implements OnInit {
   // Link to our api, pointing to localhost
   API = 'http://localhost:3000';
 
