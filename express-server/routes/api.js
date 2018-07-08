@@ -60,21 +60,22 @@ router.get('/users/:id', (req, res) => {
 
 /* Create a user. */
 router.post('/users', (req, res) => {
+  console.log(req);
   let user = new User({
-    email: req.email,
-    password: req.password,
-    firstName: req.firstName,
-    lastName: req.lastName,
-    gender: req.gender,
-    birthDate: req.birthDate,
-    uvaStudent: req.uvaStudent,
-    addrStreet: req.addrStreet,
-    addrCity: req.addrCity,
-    addrZip: req.addrZip,
-    phoneNumber: req.phoneNumber,
-    hasAgreedToWaiver: req.hasAgreedToWaiver,
-    agreedToWaiverTime: req.agreedToWaiverTime,
-    membershipType: req.membershipType
+    email: req.body.email,
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    gender: req.body.gender,
+    birthDate: req.body.birthDate,
+    uvaStudent: req.body.uvaStudent,
+    addrStreet: req.body.addrStreet,
+    addrCity: req.body.addrCity,
+    addrZip: req.body.addrZip,
+    phoneNumber: req.body.phoneNumber,
+    hasAgreedToWaiver: req.body.hasAgreedToWaiver,
+    agreedToWaiverTime: req.body.agreedToWaiverTime,
+    membershipType: req.body.membershipType
   });
 
   user.save(error => {
