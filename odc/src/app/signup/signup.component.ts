@@ -19,21 +19,18 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     private http: HttpClient
   ) {}
 
-  API = 'http://localhost:3000';
-  value = '';
-  hide = true;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
-  fourthFormGroup: FormGroup;
+  public hide = true;
+  public firstFormGroup: FormGroup;
+  public secondFormGroup: FormGroup;
+  public thirdFormGroup: FormGroup;
+  public fourthFormGroup: FormGroup;
   public data: UserProfile;
+  public paypalLoad = true;
 
-  addScript = false;
-  paypalLoad = true;
+  private API = 'http://localhost:3000';
+  private addScript = false;
 
-  finalAmount = 1;
-
-  paypalConfig = {
+  private paypalConfig = {
     env: 'sandbox',
     client: {
       sandbox:
@@ -46,7 +43,12 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       return actions.payment.create({
         payment: {
           transactions: [
-            { amount: { total: this.finalAmount, currency: 'USD' } }
+            {
+              amount: {
+                total: this.fourthFormGroup.get('plan').value,
+                currency: 'USD'
+              }
+            }
           ]
         }
       });
@@ -62,20 +64,45 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     }
   };
 
-  genders = [
+  public genders = [
     { value: 'male', viewValue: 'Male' },
     { value: 'female', viewValue: 'Female' }
   ];
 
-  studentOptions = [
+  public studentOptions = [
     { value: 'yes', viewValue: 'Yes' },
     { value: 'no', viewValue: 'No' }
   ];
 
-  memberships = [
+  public memberships = [
     { value: '30', viewValue: 'Semester (5-Month) Membership ($30)' },
     { value: '50', viewValue: 'Yearly (12-month) Membership ($50)' }
   ];
+
+  ngOnInit() {
+    this.firstFormGroup = this._formBuilder.group({
+      email: [null, Validators.required],
+      password: [null, Validators.required]
+    });
+    this.secondFormGroup = this._formBuilder.group({
+      firstName: [null, Validators.required],
+      lastName: [null, Validators.required],
+      gender: [null, Validators.required],
+      birthDate: [null, Validators.required],
+      student: [null, Validators.required],
+      street: [null, Validators.required],
+      city: [null, Validators.required],
+      state: [null, Validators.required],
+      zip: [null, Validators.required],
+      phoneNumber: [null, Validators.required]
+    });
+    this.thirdFormGroup = this._formBuilder.group({
+      waiver: [null, Validators.required]
+    });
+    this.fourthFormGroup = this._formBuilder.group({
+      plan: [null, Validators.required]
+    });
+  }
 
   ngAfterViewChecked(): void {
     if (!this.addScript) {
@@ -109,37 +136,23 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       addrCity: this.secondFormGroup.get('city').value,
       addrZip: this.secondFormGroup.get('zip').value,
       phoneNumber: this.secondFormGroup.get('phoneNumber').value,
+      hasAgreedToWaiver: this.thirdFormGroup.get('waiver').value,
+      agreedToWaiverTime: new Date(),
       membershipType: {
         pricePaid: this.fourthFormGroup.get('plan').value,
-        type: 'test'
+        type: this.determineMembershipPrice()
       },
-      hasAgreedToWaiver: this.thirdFormGroup.get('waiver').value,
-      agreedToWaiverTime: new Date()
+      isActiveOnWeb: false
     };
   }
 
-  ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
-      email: [null, Validators.required],
-      password: [null, Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      firstName: [null, Validators.required],
-      lastName: [null, Validators.required],
-      gender: [null, Validators.required],
-      birthDate: [null, Validators.required],
-      student: [null, Validators.required],
-      street: [null, Validators.required],
-      city: [null, Validators.required],
-      state: [null, Validators.required],
-      zip: [null, Validators.required],
-      phoneNumber: [null, Validators.required]
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      waiver: [null, Validators.required]
-    });
-    this.fourthFormGroup = this._formBuilder.group({
-      plan: [null, Validators.required]
-    });
+  private determineMembershipPrice(): string {
+    const membershipPrice = this.fourthFormGroup.get('plan').value;
+    if (membershipPrice === '50') {
+      return this.memberships[1].viewValue;
+    } else {
+      // $30 membership
+      return this.memberships[0].viewValue;
+    }
   }
 }

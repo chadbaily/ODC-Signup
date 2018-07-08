@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear="true" #stepper>
+<mat-horizontal-stepper linear="false" #stepper>
   <!-- Change to true for real site -->
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
@@ -136,13 +136,15 @@
         Purchase a Membership!
       </mat-card-title>
       <mat-card-content>
-        <mat-form-field>
-          <mat-select placeholder="Membership" [(ngModel)]="finalAmount">
-            <mat-option *ngFor="let plan of memberships" [value]="plan.value">
-              {{ plan.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <form [formGroup]="fourthFormGroup">
+          <mat-form-field>
+            <mat-select placeholder="Membership" formControlName="plan">
+              <mat-option *ngFor="let plan of memberships" [value]="plan.value">
+                {{ plan.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
         <!-- <input type="number" [(ngModel)]="finalAmount" style="padding-bottom: 10px;"> -->
         <h2 *ngIf="paypalLoad">Paypal button is loading</h2>
         <div id="paypal-checkout-btn"></div>

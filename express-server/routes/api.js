@@ -29,7 +29,8 @@ const userSchema = new mongoose.Schema({
   phoneNumber: String,
   hasAgreedToWaiver: Boolean,
   agreedToWaiverTime: Date,
-  membershipType: Membership
+  membershipType: Membership,
+  isActiveOnWeb: Boolean
 });
 
 // create mongoose model
@@ -60,7 +61,6 @@ router.get('/users/:id', (req, res) => {
 
 /* Create a user. */
 router.post('/users', (req, res) => {
-  console.log(req);
   let user = new User({
     email: req.body.email,
     password: req.body.password,
@@ -75,7 +75,8 @@ router.post('/users', (req, res) => {
     phoneNumber: req.body.phoneNumber,
     hasAgreedToWaiver: req.body.hasAgreedToWaiver,
     agreedToWaiverTime: req.body.agreedToWaiverTime,
-    membershipType: req.body.membershipType
+    membershipType: req.body.membershipType,
+    isActiveOnWeb: req.body.isActiveOnWeb
   });
 
   user.save(error => {

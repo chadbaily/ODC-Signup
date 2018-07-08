@@ -21,6 +21,7 @@ export interface UserProfile {
   hasAgreedToWaiver: boolean;
   agreedToWaiverTime: Date;
   membershipType: Membership;
+  isActiveOnWeb: boolean;
 }
 
 @Injectable()
