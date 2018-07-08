@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Membership } from '../dataAccess.service';
+import { Membership, UserProfile } from '../dataAccess.service';
 
 @Component({
   selector: 'app-activate',
@@ -11,7 +11,7 @@ export class ActivateComponent implements OnInit {
   API = 'http://localhost:3000';
 
   // Declare empty list of people
-  people: any = [];
+  people: UserProfile;
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +22,7 @@ export class ActivateComponent implements OnInit {
   getAllPeople() {
     this.http.get(`${this.API}/users`).subscribe(people => {
       console.log(people);
-      this.people = people;
+      this.people = <UserProfile>people;
     });
   }
 }

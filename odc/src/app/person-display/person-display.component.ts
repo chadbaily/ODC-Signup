@@ -3,8 +3,7 @@ import { UserProfile } from '../dataAccess.service';
 
 @Component({
   selector: 'app-person-display',
-  templateUrl: './person-display.component.html',
-  styleUrls: ['./person-display.component.css']
+  templateUrl: './person-display.component.html'
 })
 export class PersonDisplayComponent implements OnInit {
   @Input() person: UserProfile;
