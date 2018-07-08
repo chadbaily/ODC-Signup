@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear="false" #stepper>
+<mat-horizontal-stepper linear="true" #stepper>
   <!-- Change to true for real site -->
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
@@ -13,7 +13,7 @@
         </mat-form-field>
       </div>
       <div class="align-right">
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Next</button>
       </div>
     </form>
   </mat-step>
@@ -86,7 +86,7 @@
 
       <div>
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext class="float-right">Next</button>
+        <button mat-button matStepperNext class="float-right" [disabled]="!secondFormGroup.valid">Next</button>
       </div>
     </form>
   </mat-step>
@@ -125,7 +125,7 @@
       </mat-card-content>
       <mat-card-actions class="row">
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext class="float-right">Next</button>
+        <button mat-button matStepperNext class="float-right" [disabled]="!thirdFormGroup.valid">Next</button>
       </mat-card-actions>
     </mat-card>
   </mat-step>
