@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear="false" #stepper>
+<mat-horizontal-stepper linear="true" #stepper>
   <!-- Change to true for real site -->
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
@@ -73,7 +73,7 @@
         </mat-form-field>
 
         <mat-form-field class="odc-full-width col-sm-4">
-          <input matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
+          <input type="number" matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
           <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
         </mat-form-field>
       </div>
