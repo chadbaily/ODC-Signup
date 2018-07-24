@@ -88,4 +88,22 @@ router.post('/users', (req, res) => {
   });
 });
 
+/* Delete a user from the DB */
+router.post('/deleteUser', (req, res) => {
+  User.deleteOne(
+    {
+      email: req.body.email,
+      password: req.body.password,
+      birthDate: req.body.birthDate
+    },
+    (err, obj) => {
+      if (err) obj.status(500).send(error);
+
+      res.status(201).json({
+        message: 'User deleted successfully'
+      });
+    }
+  );
+});
+
 module.exports = router;

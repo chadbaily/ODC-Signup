@@ -1,5 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Host } from '@angular/core';
 import { UserProfile } from '../dataAccess.service';
+import { HttpClient } from '../../../node_modules/@angular/common/http';
+import { Router } from '../../../node_modules/@angular/router';
+import { ActivateComponent } from '../activate/activate.component';
 
 @Component({
   selector: 'app-person-display',
@@ -7,8 +10,20 @@ import { UserProfile } from '../dataAccess.service';
 })
 export class PersonDisplayComponent implements OnInit {
   @Input() person: UserProfile;
+  private API = 'http://localhost:3000';
 
-  constructor() {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Host() private parent: ActivateComponent
+  ) {}
 
   ngOnInit() {}
+
+  delete() {
+    this.http
+      .post(`${this.API}/deleteUser`, this.person)
+      .subscribe(() => console.log('Person deleted'));
+    this.parent.getAllPeople();
+  }
 }

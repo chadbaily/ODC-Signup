@@ -1,17 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Membership, UserProfile } from '../dataAccess.service';
+import { PersonDisplayComponent } from '../person-display/person-display.component';
+
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-activate',
   templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnInit {
-  // Link to our api, pointing to localhost
-  API = 'http://localhost:3000';
-
   // Declare empty list of people
-  people: UserProfile;
+  public people = new BehaviorSubject<UserProfile>(null);
+
+  get persons() {
+    return this.people.getValue();
+  }
+
+  // Link to our api, pointing to localhost
+  private API = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
@@ -21,8 +28,8 @@ export class ActivateComponent implements OnInit {
   // Get all users from the API
   getAllPeople() {
     this.http.get(`${this.API}/users`).subscribe(people => {
-      console.log(people);
-      this.people = <UserProfile>people;
+      this.people.next(<UserProfile>people);
+      console.log(this.people.getValue());
     });
   }
 }
