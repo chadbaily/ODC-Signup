@@ -15,6 +15,7 @@ import { DataAccessService } from './dataAccess.service';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { ActivateComponent } from './activate/activate.component';
 import { PersonDisplayComponent } from './person-display/person-display.component';
+import { DeleteUserModalComponent } from './delete-user-modal/delete-user-modal.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { PersonDisplayComponent } from './person-display/person-display.componen
     SignupComponent,
     ThankYouComponent,
     ActivateComponent,
-    PersonDisplayComponent
+    PersonDisplayComponent,
+    DeleteUserModalComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +38,7 @@ import { PersonDisplayComponent } from './person-display/person-display.componen
     HttpClientModule
   ],
   providers: [DataAccessService],
+  entryComponents: [DeleteUserModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

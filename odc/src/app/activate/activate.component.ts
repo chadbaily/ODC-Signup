@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Membership, UserProfile } from '../dataAccess.service';
-import { PersonDisplayComponent } from '../person-display/person-display.component';
+import { UserProfile } from '../dataAccess.service';
 
 import { BehaviorSubject } from 'rxjs';
 
