@@ -7,7 +7,7 @@ const router = express.Router();
 const dbHost = 'mongodb://database/mean-docker';
 
 // Connect to mongodb
-mongoose.connect(dbHost);
+mongoose.connect(process.env.MONGODB_URI);
 
 const Membership = new mongoose.Schema({
   type: String,
