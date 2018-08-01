@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
-import { Time } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataAccessService, UserProfile } from '../dataAccess.service';
@@ -27,7 +26,7 @@ export class SignupComponent implements OnInit, AfterViewChecked {
   public data: UserProfile;
   public paypalLoad = true;
 
-  private API = 'http://localhost:3000';
+  // private API = this.dataAccess.API;
   private addScript = false;
 
   private paypalConfig = {
@@ -57,7 +56,7 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       return actions.payment.execute().then(payment => {
         this.createDataModel();
         this.http
-          .post(`${this.API}/users`, this.data)
+          .post('/api/users', this.data)
           .subscribe(() => console.log('Added User!'));
         this.router.navigate(['thank-you']);
       });

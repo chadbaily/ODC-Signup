@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Host } from '@angular/core';
-import { UserProfile } from '../dataAccess.service';
+import { UserProfile, DataAccessService } from '../dataAccess.service';
 import { HttpClient } from '../../../node_modules/@angular/common/http';
-import { Router } from '../../../node_modules/@angular/router';
 import { ActivateComponent } from '../activate/activate.component';
 import { MatDialog } from '../../../node_modules/@angular/material';
 import { DeleteUserModalComponent } from '../delete-user-modal/delete-user-modal.component';
@@ -12,11 +11,11 @@ import { DeleteUserModalComponent } from '../delete-user-modal/delete-user-modal
 })
 export class PersonDisplayComponent implements OnInit {
   @Input() person: UserProfile;
-  private API = 'http://localhost:3000';
+  // private API = this.dataAccess.API;
 
   constructor(
     private http: HttpClient,
-    private router: Router,
+    private dataAccess: DataAccessService,
     @Host() private parent: ActivateComponent,
     public dialog: MatDialog
   ) {}
@@ -32,7 +31,7 @@ export class PersonDisplayComponent implements OnInit {
       // console.log('The dialog was closed: ', result);
       if (result) {
         this.http
-          .post(`${this.API}/deleteUser`, this.person)
+          .post('/api/deleteUser', this.person)
           .subscribe(() => console.log('Person deleted'));
         this.parent.getAllPeople();
       }

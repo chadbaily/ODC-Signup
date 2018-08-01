@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export interface Membership {
@@ -32,4 +32,11 @@ export class DataAccessService {
   get userProfile$(): BehaviorSubject<UserProfile> {
     return this._userProfile$;
   }
+
+  // get API() {
+  //   if (isDevMode()) {
+  //     return 'http://localhost:8080/api';
+  //   }
+  //   return 'mongodb://heroku_glcxhfxx:d7h8ToStop@ds257981.mlab.com:57981/heroku_glcxhfxx';
+  // }
 }
