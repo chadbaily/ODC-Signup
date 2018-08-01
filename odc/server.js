@@ -11,7 +11,7 @@ const path = require('path');
 const http = require('http');
 
 // configuration ===============================================================
-mongoose.connect(process.env.MONGO_URL || database.localUrl); // Connect to local MongoDB instance. A remoteUrl is also available (modulus.io)
+mongoose.connect(process.env.MONGOLAB_SILVER_URI || database.localUrl); // Connect to local MongoDB instance. A remoteUrl is also available (modulus.io)
 mongoose.connection.on('error', console.error.bind(console, 'Mongo Error: '));
 
 // app.use(express.static("./public")); // set the static files location /public/img will be /img for users
