@@ -3,6 +3,9 @@ https://scotch.io/tutorials/create-a-mean-app-with-angular-2-and-docker-compose#
 
 https://letsencrypt.org/getting-started/
 
+https://github.com/casperjs/casperjs/issues/1355
+
+
 Build Angular server:
 docker build -t angular-client:dev .
 docker run --name angular-client -p 4200:4200 angular-client:dev
@@ -16,6 +19,8 @@ docker run --name mongodb -p 27017:27017 mongo
 
 Casper:
 docker pull vitr/casperjs
+
+docker exec casperjs-daemon casperjs capture.js
 
 
 Build a new compose:

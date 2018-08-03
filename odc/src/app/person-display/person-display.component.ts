@@ -22,6 +22,13 @@ export class PersonDisplayComponent implements OnInit {
 
   ngOnInit() {}
 
+  activate() {
+    this.http
+      .post('/api/activate', this.person)
+      .subscribe(() => console.log('Person created!'));
+    this.parent.getAllPeople();
+  }
+
   delete() {
     const dialogRef = this.dialog.open(DeleteUserModalComponent, {
       width: '250px'

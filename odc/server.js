@@ -2,13 +2,16 @@
 var express = require('express');
 var app = express(); // create our app w/ express
 var mongoose = require('mongoose'); // mongoose for mongodb
-var port = process.env.PORT || 8080; // set the port
+var port = process.env.PORT || 4200; // set the port
 var database = require('./config/database'); // load the database config
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 const path = require('path');
 const http = require('http');
+
+var exec = require('child_process').exec;
+var shellescape = require('shell-escape');
 
 // configuration ===============================================================
 mongoose.connect(process.env.MONGOLAB_SILVER_URI || database.localUrl); // Connect to local MongoDB instance. A remoteUrl is also available (modulus.io)
@@ -30,6 +33,30 @@ app.use(express.static(path.join(__dirname, '/dist/odc')));
 // API location
 app.use('/api', api);
 
+app.post('/api/activate', (req, res) => {
+  const user = {
+    email: req.body.email,
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    gender: req.body.gender,
+    birthDate: req.body.birthDate,
+    uvaStudent: req.body.uvaStudent,
+    addrStreet: req.body.addrStreet,
+    addrCity: req.body.addrCity,
+    addrZip: req.body.addrZip,
+    phoneNumber: req.body.phoneNumber,
+    hasAgreedToWaiver: req.body.hasAgreedToWaiver,
+    agreedToWaiverTime: req.body.agreedToWaiverTime,
+    membershipType: req.body.membershipType
+  };
+  console.log(req.body);
+  // if (error) res.status(500).send(error);
+
+  res.status(201).json({
+    message: 'User added on ODC!'
+  });
+});
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/dist/odc/index.html'));

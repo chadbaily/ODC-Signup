@@ -1,6 +1,6 @@
 // Import dependencies
-const mongoose = require("mongoose");
-const express = require("express");
+const mongoose = require('mongoose');
+const express = require('express');
 const router = express.Router();
 
 const Membership = new mongoose.Schema({
@@ -28,15 +28,15 @@ const userSchema = new mongoose.Schema({
 });
 
 // create mongoose model
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 /* GET api listing. */
-router.get("/", (req, res) => {
-  res.send("api works");
+router.get('/', (req, res) => {
+  res.send('api works');
 });
 
 /* GET all users. */
-router.get("/users", (req, res) => {
+router.get('/users', (req, res) => {
   User.find({}, (err, users) => {
     if (err) res.status(500).send(error);
 
@@ -45,7 +45,7 @@ router.get("/users", (req, res) => {
 });
 
 /* GET one users. */
-router.get("/users/:id", (req, res) => {
+router.get('/users/:id', (req, res) => {
   User.findById(req.param.id, (err, users) => {
     if (err) res.status(500).send(error);
 
@@ -54,7 +54,7 @@ router.get("/users/:id", (req, res) => {
 });
 
 /* Create a user. */
-router.post("/users", (req, res) => {
+router.post('/users', (req, res) => {
   let user = new User({
     email: req.body.email,
     password: req.body.password,
@@ -77,13 +77,13 @@ router.post("/users", (req, res) => {
     if (error) res.status(500).send(error);
 
     res.status(201).json({
-      message: "User created successfully"
+      message: 'User created successfully'
     });
   });
 });
 
 /* Delete a user from the DB */
-router.post("/deleteUser", (req, res) => {
+router.post('/deleteUser', (req, res) => {
   User.deleteOne(
     {
       email: req.body.email,
@@ -94,10 +94,9 @@ router.post("/deleteUser", (req, res) => {
       if (err) obj.status(500).send(error);
 
       res.status(201).json({
-        message: "User deleted successfully"
+        message: 'User deleted successfully'
       });
     }
   );
 });
-
 module.exports = router;
