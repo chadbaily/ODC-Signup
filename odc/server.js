@@ -52,6 +52,7 @@ app.use('/api', api);
 app.post('/api/check-email', (req, res) => {
   // Check if email is there
   const email = req.body.email;
+  // console.log('Email is: ', email);
   mysqlDB.query('SELECT * FROM email WHERE email="' + email + '"', function(
     err,
     result,
@@ -60,7 +61,9 @@ app.post('/api/check-email', (req, res) => {
     if (err) console.error('ERROR: ', err);
     // Check to see if the email matches
     if (result.length === 0) {
-      res.status(201).send();
+      res.status(201).json({
+        message: 'Email not found'
+      });
     } else {
       res.status(201).json({
         error: {

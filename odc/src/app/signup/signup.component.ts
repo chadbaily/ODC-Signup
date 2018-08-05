@@ -170,20 +170,19 @@ export class SignupComponent implements OnInit, AfterViewChecked {
 
   checkEmail(stepper: MatStepper) {
     const email = this.firstFormGroup.get('email').value;
-    this.http.post('/api/check-email', email).subscribe(result => {
-      console.log(result);
+    // console.log('Email: ', email);
+    this.http.post('/api/check-email', { email }).subscribe(result => {
+      // console.log(result);
       if (result) {
-        console.log('Made it into result');
+        // console.log('Made it into result');
         if (result.hasOwnProperty('error')) {
           const errorResult = result as Error;
           this.dialog.open(EmailValidationModalComponent, {
             width: '250px',
             data: errorResult.error.message
           });
-
-          // dialogRef.afterClosed().subscribe(() => {
-
-          // });
+        } else {
+          stepper.next();
         }
       } else {
         stepper.next();
