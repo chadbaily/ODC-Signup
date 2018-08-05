@@ -27,4 +27,9 @@ Build a new compose:
 docker-compose up --build 
 
 Delete un-used things:
-docker system prune -a
+docker system prune -
+
+
+Deploy to heroku
+heroku container:push web
+heroku container:release web

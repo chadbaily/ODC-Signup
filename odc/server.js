@@ -53,7 +53,7 @@ app.post('/api/check-email', (req, res) => {
   // Check if email is there
   const email = req.body.email;
   // console.log('Email is: ', email);
-  mysqlDB.query('SELECT * FROM email WHERE email="' + email + '"', function(
+  mysqlDB.query('SELECT * FROM m_member WHERE c_email="' + email + '"', function(
     err,
     result,
     fields
