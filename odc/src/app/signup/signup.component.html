@@ -13,7 +13,7 @@
         </mat-form-field>
       </div>
       <div class="align-right">
-        <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Next</button>
+        <button mat-button (click)="checkEmail(stepper)" [disabled]="!firstFormGroup.valid">Next</button>
       </div>
     </form>
   </mat-step>

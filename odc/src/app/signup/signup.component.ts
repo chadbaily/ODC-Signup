@@ -1,21 +1,34 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DataAccessService, UserProfile } from '../dataAccess.service';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { MatDialog, MatStepper } from '@angular/material';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { UserProfile } from '../dataAccess.service';
+import { EmailValidationModalComponent } from '../modals/email-validation-modal/email-validation-modal.component';
 
 declare let paypal: any;
 
+interface ErrorContent {
+  status: string;
+  message: string;
+}
+
+interface Error {
+  error: ErrorContent;
+}
+
 @Component({
   selector: 'app-signup',
-  templateUrl: './signup.component.html'
+  templateUrl: './signup.component.html',
+  providers: [MatStepper]
 })
 export class SignupComponent implements OnInit, AfterViewChecked {
   constructor(
     private _formBuilder: FormBuilder,
     private router: Router,
-    private dataAccess: DataAccessService,
-    private http: HttpClient
+    private http: HttpClient,
+    public dialog: MatDialog
   ) {}
 
   public hide = true;
@@ -153,5 +166,28 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       // $30 membership
       return this.memberships[0].viewValue;
     }
+  }
+
+  checkEmail(stepper: MatStepper) {
+    const email = this.firstFormGroup.get('email').value;
+    this.http.post('/api/check-email', email).subscribe(result => {
+      console.log(result);
+      if (result) {
+        console.log('Made it into result');
+        if (result.hasOwnProperty('error')) {
+          const errorResult = result as Error;
+          this.dialog.open(EmailValidationModalComponent, {
+            width: '250px',
+            data: errorResult.error.message
+          });
+
+          // dialogRef.afterClosed().subscribe(() => {
+
+          // });
+        }
+      } else {
+        stepper.next();
+      }
+    });
   }
 }

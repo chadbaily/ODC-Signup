@@ -15,7 +15,8 @@ import { DataAccessService } from './dataAccess.service';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { ActivateComponent } from './activate/activate.component';
 import { PersonDisplayComponent } from './person-display/person-display.component';
-import { DeleteUserModalComponent } from './delete-user-modal/delete-user-modal.component';
+import { DeleteUserModalComponent } from './modals/delete-user-modal/delete-user-modal.component';
+import { EmailValidationModalComponent } from './modals/email-validation-modal/email-validation-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DeleteUserModalComponent } from './delete-user-modal/delete-user-modal.
     ThankYouComponent,
     ActivateComponent,
     PersonDisplayComponent,
-    DeleteUserModalComponent
+    DeleteUserModalComponent,
+    EmailValidationModalComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +40,7 @@ import { DeleteUserModalComponent } from './delete-user-modal/delete-user-modal.
     HttpClientModule
   ],
   providers: [DataAccessService],
-  entryComponents: [DeleteUserModalComponent],
+  entryComponents: [DeleteUserModalComponent, EmailValidationModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

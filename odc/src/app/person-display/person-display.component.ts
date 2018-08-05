@@ -3,7 +3,7 @@ import { UserProfile, DataAccessService } from '../dataAccess.service';
 import { HttpClient } from '../../../node_modules/@angular/common/http';
 import { ActivateComponent } from '../activate/activate.component';
 import { MatDialog } from '../../../node_modules/@angular/material';
-import { DeleteUserModalComponent } from '../delete-user-modal/delete-user-modal.component';
+import { DeleteUserModalComponent } from '../modals/delete-user-modal/delete-user-modal.component';
 
 @Component({
   selector: 'app-person-display',
