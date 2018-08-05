@@ -19,19 +19,6 @@ mongoose.connect(process.env.MONGOLAB_SILVER_URI || database.localUrl),
   { useNewUrlParser: true }; // Connect to local MongoDB instance. A remoteUrl is also available (modulus.io)
 mongoose.connection.on('error', console.error.bind(console, 'Mongo Error: '));
 
-// Connect to DB
-let mysqlDB = mysql.createConnection({
-  host: process.env.MYSQLHOST || 'localhost',
-  user: process.env.MYSQLUSER || 'root',
-  password: process.env.MYSQLPASS || 'my-secret-pw',
-  database: process.env.MYSQLDATABASE || 'main'
-});
-
-mysqlDB.connect(function(err) {
-  if (err) console.error.bind(console, 'MySql Error: ', err);
-  console.log('MySql Connected!');
-});
-
 // app.use(express.static("./public")); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({ extended: 'true' })); // parse application/x-www-form-urlencoded
@@ -50,29 +37,40 @@ app.use('/api', api);
 
 // Check if email is already in use
 app.post('/api/check-email', (req, res) => {
+  // Connect to DB
+  let mysqlDB = mysql.createConnection({
+    host: process.env.MYSQLHOST || 'localhost',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASS || 'my-secret-pw',
+    database: process.env.MYSQLDATABASE || 'main'
+  });
+  mysqlDB.connect(function(err) {
+    if (err) console.error.bind(console, 'MySql Error: ', err);
+    // console.log('MySql Connected!');
+  });
   // Check if email is there
   const email = req.body.email;
   // console.log('Email is: ', email);
-  mysqlDB.query('SELECT * FROM m_member WHERE c_email="' + email + '"', function(
-    err,
-    result,
-    fields
-  ) {
-    if (err) console.error('ERROR: ', err);
-    // Check to see if the email matches
-    if (result.length === 0) {
-      res.status(201).json({
-        message: 'Email not found'
-      });
-    } else {
-      res.status(201).json({
-        error: {
-          status: 'w',
-          message: 'Email already in use, please enter another'
-        }
-      });
+  mysqlDB.query(
+    'SELECT * FROM m_member WHERE c_email="' + email + '"',
+    function(err, result, fields) {
+      if (err) console.error('ERROR: ', err);
+      // Check to see if the email matches
+      if (result.length === 0) {
+        res.status(201).json({
+          message: 'Email not found'
+        });
+      } else {
+        res.status(201).json({
+          error: {
+            status: 'w',
+            message: 'Email already in use, please enter another'
+          }
+        });
+      }
     }
-  });
+  );
+  mysqlDB.end();
 });
 
 app.post('/api/activate', (req, res) => {
