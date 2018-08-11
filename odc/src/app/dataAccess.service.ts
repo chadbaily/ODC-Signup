@@ -12,7 +12,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   gender: string;
-  birthDate: Date;
+  birthDate: string;
   uvaStudent: boolean;
   addrStreet: string;
   addrCity: string;

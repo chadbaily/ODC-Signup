@@ -4,12 +4,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import * as moment from 'moment';
+
 import { DataAccessService } from '../dataAccess.service';
 @Component({
   selector: 'app-step-two',
   templateUrl: './step-two.component.html'
 })
 export class StepTwoComponent implements OnInit {
+  public moment = moment;
   public secondFormGroup: FormGroup;
   public genders = [
     { value: 'm', viewValue: 'Male' },
@@ -35,13 +38,17 @@ export class StepTwoComponent implements OnInit {
 
   submit() {
     const profile = this.dataAccess.userProfile$.getValue();
+    const date = moment(this.secondFormGroup.get('birthDate').value).format(
+      'YYYY-MM-DD'
+    );
+    console.log(date);
     this.dataAccess.userProfile$.next({
       email: profile.email,
       password: profile.password,
       firstName: this.secondFormGroup.get('firstName').value,
       lastName: this.secondFormGroup.get('lastName').value,
       gender: this.secondFormGroup.get('gender').value,
-      birthDate: this.secondFormGroup.get('birthDate').value,
+      birthDate: date,
       uvaStudent: this.secondFormGroup.get('student').value,
       addrStreet: this.secondFormGroup.get('street').value,
       addrCity: this.secondFormGroup.get('city').value,
