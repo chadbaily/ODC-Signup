@@ -100,7 +100,8 @@ app.post('/api/activate', (req, res) => {
   // if (error) res.status(500).send(error);
 
   res.status(201).json({
-    message: 'User added on ODC!'
+    message: 'User added on ODC!',
+    data: jsonToURI(user)
   });
 });
 // Send all other requests to the Angular app
@@ -111,3 +112,14 @@ app.get('*', (req, res) => {
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
+
+function jsonToURI(json) {
+  return encodeURIComponent(JSON.stringify(json));
+}
+
+function sendPost(data) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'http://www.outdoorsatuva.org/members/join', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.send(jsonToURI(data));
+}

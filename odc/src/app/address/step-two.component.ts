@@ -12,20 +12,21 @@ import { DataAccessService } from '../dataAccess.service';
 export class StepTwoComponent implements OnInit {
   public secondFormGroup: FormGroup;
   public genders = [
-    { value: 'male', viewValue: 'Male' },
-    { value: 'female', viewValue: 'Female' }
+    { value: 'm', viewValue: 'Male' },
+    { value: 'f', viewValue: 'Female' }
   ];
 
   public studentOptions = [
-    { value: 'yes', viewValue: 'Yes' },
-    { value: 'no', viewValue: 'No' }
+    { value: '1', viewValue: 'Yes' },
+    { value: '0', viewValue: 'No' }
   ];
 
   public filteredOptions: Observable<string[]>;
 
   public stateOptions = this.setStates();
 
-  @Input() stepper: MatStepper;
+  @Input()
+  stepper: MatStepper;
 
   constructor(
     private formBuilder: FormBuilder,

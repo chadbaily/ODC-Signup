@@ -8,6 +8,9 @@ https://github.com/casperjs/casperjs/issues/1355
 Link to stepper
 https://stackoverflow.com/questions/48498966/angular-material-stepper-component-for-each-step?rq=1
 
+Select option in casperjs
+https://stackoverflow.com/questions/28515292/how-to-fill-a-select-element-which-is-not-embedded-in-a-form-with-casperjs
+
 
 Build Angular server:
 docker build -t angular-client:dev .

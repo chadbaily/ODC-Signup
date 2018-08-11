@@ -1,0 +1,21 @@
+{
+  "form-name": "1",
+  "firstName": "Chad",
+  "lastName": "Baily",
+  "gender": "m",
+  "student": "1",
+  "dob": "2018-08-01",
+  "emailAddress": "chadbaily27@gmail.com",
+  "confirmEmailAddress": "chadbaily27@gmail.com",
+  "password1": "test",
+  "password2": "test",
+  "street": "7461 Pine Ridge Road",
+  "city": "MECHANICSVILLE",
+  "state": "VA",
+  "zip": "23116",
+  "areaCode": "804",
+  "exchange": "317",
+  "number": "1637",
+  "phoneNumberType": "1",
+  "membership-plan": "18"
+}
