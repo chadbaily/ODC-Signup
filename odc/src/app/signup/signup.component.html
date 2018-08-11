@@ -1,171 +1,19 @@
 <mat-horizontal-stepper linear="true" #stepper>
   <!-- Change to true for real site -->
   <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Create a login</ng-template>
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-xl-6">
-          <input matInput type="email" placeholder="Email" formControlName="email" required>
-          <mat-error *ngIf="firstFormGroup.get('email').hasError('pattern')">Please enter a valid email</mat-error>
-          <mat-error *ngIf="firstFormGroup.get('email').hasError('required')">Please enter an email</mat-error>
-        </mat-form-field>
-        <mat-form-field class="odc-full-width col-xl-6">
-          <input matInput placeholder="Enter your password" formControlName="password" [type]="hide ? 'password' : 'text'" required>
-          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-          <mat-error *ngIf="firstFormGroup.get('password').hasError('required')">Please enter a password</mat-error>
-        </mat-form-field>
-        <div class="alert alert-warning" role="alert">
-          Passwords are not encrypted. Do NOT use a password that you use elsewhere, such as the password to your email account. Create
-          a NEW password.
-        </div>
-      </div>
-      <div class="align-right">
-        <button mat-button (click)="checkEmail(stepper)" [disabled]="!firstFormGroup.valid">Next</button>
-      </div>
-    </form>
+    <ng-template matStepLabel>Create a login</ng-template>
+    <app-step-one [stepper]="stepper"></app-step-one>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Fill out your address</ng-template>
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-6">
-          <input matInput placeholder="First name" formControlName="firstName" required>
-          <mat-error *ngIf="secondFormGroup.get('firstName').hasError('required')">Please enter a first name</mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="odc-full-width col-sm-6">
-          <input matInput placeholder="Last Name" formControlName="lastName" required>
-          <mat-error *ngIf="secondFormGroup.get('lastName').hasError('required')">Please enter a last name</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-12">
-          <mat-select placeholder="Gender" formControlName="gender" required>
-            <mat-option *ngFor="let gender of genders" [value]="gender.value">
-              {{ gender.viewValue }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="secondFormGroup.get('gender').hasError('required')">Please select a gender</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-12">
-          <input matInput [matDatepicker]="picker" placeholder="Birthdate" formControlName="birthDate" required>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="secondFormGroup.get('birthDate').hasError('required')">Please select a birthdate</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-12">
-          <mat-select placeholder="Are you a UVa Student?" formControlName="student" required>
-            <mat-option *ngFor="let studentOption of studentOptions" [value]="studentOption.value">
-              {{ studentOption.viewValue }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="secondFormGroup.get('student').hasError('required')">Please select a value</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-12">
-          <input matInput placeholder="Address" formControlName="street" required>
-          <mat-error *ngIf="secondFormGroup.get('street').hasError('required')">Please enter a street</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-4">
-          <input matInput placeholder="City" formControlName="city" required>
-          <mat-error *ngIf="secondFormGroup.get('city').hasError('required')">Please enter a city</mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="odc-full-width col-sm-4">
-          <input matInput placeholder="State" formControlName="state" required>
-          <mat-error *ngIf="secondFormGroup.get('state').hasError('required')">Please select a state</mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="odc-full-width col-sm-4">
-          <input type="number" matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
-          <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-          <mat-error *ngIf="secondFormGroup.get('zip').hasError('required')">Please enter a zipcode</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="odc-full-width row">
-        <mat-form-field class="odc-full-width col-sm-12">
-          <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
-          <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('required')">Please enter a phone number</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext class="float-right" [disabled]="!secondFormGroup.valid">Next</button>
-      </div>
-    </form>
+    <ng-template matStepLabel>Fill out your address</ng-template>
+    <app-step-two></app-step-two>
   </mat-step>
   <mat-step [stepControl]="thirdFormGroup">
     <ng-template matStepLabel>Sign the waiver</ng-template>
-    <mat-card>
-      <mat-card-title>
-        <strong>
-          INDEMNIFICATION AGREEMENT
-        </strong>
-      </mat-card-title>
-      <mat-card-content>
-        <p>
-          In consideration of the benefits received from being a member of Outdoors at UVa, Ltd. and participating in its activities,
-          I agree for myself, my personal representatives, heirs, and assigns, as follows:
-          <br> I understand that the outdoor activities sponsored by Outdoors at UVa, Ltd. involve risk of serious bodily injury
-          and even death. I understand and recognize that there are dangers and risks involved in outdoor activities, which
-          often occur at locations that are both distant from and inaccessible to doctors, hospitals, and emergency medical
-          care. The activities often take place on rough terrain where there is a lack of shelter from inclement weather,
-          including thunderstorms, snow, freezing temperatures, high temperatures, and high humidity, all of which are subject
-          to sudden and unforecasted changes.
-          <br> Some of the activities, such as canoeing, rafting, rock climbing, wilderness hiking, mountain biking, trail running,
-          backpacking, kayaking, caving, skiing, snowboarding, and others are inherently dangerous.
-          <br> I understand and recognize the risks described above and that other unidentified risks may exist, when I engage
-          in Outdoors at UVa, Ltd. sponsored activities. I assume the risks of injury and death arising from my participation
-          in these activities.
-          <br> I agree to indemnify and hold harmless Outdoors at UVa, Ltd., its directors, officers, and agents from liability
-          arising from my injury or death arising from my participation in Outdoors at UVa, Ltd. activities.
-          <br>
-          <strong>BY SIGNING BELOW, I ACKNOWLEDGE THAT I HAVE READ, UNDERSTOOD, AND VOLUNTARILY SIGNED THIS INDEMNIFICATION AGREEMENT
-            AND AGREE TO BE BOUND BY ITS TERMS. I UNDERSTAND THAT THIS IS A LEGAL AND ENFORCEABLE AGREEMENT.</strong>
-        </p>
-        <form [formGroup]="thirdFormGroup">
-          <mat-checkbox required formControlName="waiver">I have read and agree to the terms and conditions above</mat-checkbox>
-        </form>
-      </mat-card-content>
-      <mat-card-actions class="row">
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext class="float-right" [disabled]="!thirdFormGroup.valid">Next</button>
-      </mat-card-actions>
-    </mat-card>
+    <app-step-three></app-step-three>
   </mat-step>
   <mat-step [stepControl]="fourthFormGroup">
     <ng-template matStepLabel>Select a plan</ng-template>
-    <mat-card>
-      <mat-card-title>
-        Purchase a Membership!
-      </mat-card-title>
-      <mat-card-content>
-        <form [formGroup]="fourthFormGroup">
-          <mat-form-field>
-            <mat-select placeholder="Membership" formControlName="plan">
-              <mat-option *ngFor="let plan of memberships" [value]="plan.value">
-                {{ plan.viewValue }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form>
-        <!-- <input type="number" [(ngModel)]="finalAmount" style="padding-bottom: 10px;"> -->
-        <h2 *ngIf="paypalLoad">Paypal button is loading</h2>
-        <div id="paypal-checkout-btn"></div>
-      </mat-card-content>
-    </mat-card>
+    <app-step-four></app-step-four>
   </mat-step>
 </mat-horizontal-stepper>

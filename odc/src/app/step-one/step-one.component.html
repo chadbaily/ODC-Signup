@@ -1,0 +1,21 @@
+<form [formGroup]="firstFormGroup">
+    <div class="odc-full-width row">
+      <mat-form-field class="odc-full-width col-xl-6">
+        <input matInput type="email" placeholder="Email" formControlName="email" required>
+        <mat-error *ngIf="firstFormGroup.get('email').hasError('pattern')">Please enter a valid email</mat-error>
+        <mat-error *ngIf="firstFormGroup.get('email').hasError('required')">Please enter an email</mat-error>
+      </mat-form-field>
+      <mat-form-field class="odc-full-width col-xl-6">
+        <input matInput placeholder="Enter your password" formControlName="password" [type]="hide ? 'password' : 'text'" required>
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        <mat-error *ngIf="firstFormGroup.get('password').hasError('required')">Please enter a password</mat-error>
+      </mat-form-field>
+      <div class="alert alert-warning" role="alert">
+        Passwords are not encrypted. Do NOT use a password that you use elsewhere, such as the password to your email account. Create
+        a NEW password.
+      </div>
+    </div>
+    <div class="align-right">
+      <button mat-button (click)="checkEmail(stepper)" [disabled]="!firstFormGroup.valid">Next</button>
+    </div>
+  </form>

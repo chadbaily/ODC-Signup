@@ -1,0 +1,87 @@
+<form [formGroup]="secondFormGroup">
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-6">
+      <input matInput placeholder="First name" formControlName="firstName" required>
+      <mat-error *ngIf="secondFormGroup.get('firstName').hasError('required')">Please enter a first name</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="odc-full-width col-sm-6">
+      <input matInput placeholder="Last Name" formControlName="lastName" required>
+      <mat-error *ngIf="secondFormGroup.get('lastName').hasError('required')">Please enter a last name</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-12">
+      <mat-select placeholder="Gender" formControlName="gender" required>
+        <mat-option *ngFor="let gender of genders" [value]="gender.value">
+          {{ gender.viewValue }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="secondFormGroup.get('gender').hasError('required')">Please select a gender</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-12">
+      <input matInput [matDatepicker]="picker" placeholder="Birthdate" formControlName="birthDate" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="secondFormGroup.get('birthDate').hasError('required')">Please select a birthdate</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-12">
+      <mat-select placeholder="Are you a UVa Student?" formControlName="student" required>
+        <mat-option *ngFor="let studentOption of studentOptions" [value]="studentOption.value">
+          {{ studentOption.viewValue }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="secondFormGroup.get('student').hasError('required')">Please select a value</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-12">
+      <input matInput placeholder="Address" formControlName="street" required>
+      <mat-error *ngIf="secondFormGroup.get('street').hasError('required')">Please enter a street</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-4">
+      <input matInput placeholder="City" formControlName="city" required>
+      <mat-error *ngIf="secondFormGroup.get('city').hasError('required')">Please enter a city</mat-error>
+    </mat-form-field>
+
+    <!-- <input matInput placeholder="State" formControlName="state" required> -->
+
+    <mat-form-field class="odc-full-width col-sm-4">
+      <input type="text" placeholder="State" aria-label="Number" matInput formControlName="state" [matAutocomplete]="auto" required>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="stateOptions">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="secondFormGroup.get('state').hasError('required')">Please select a state</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="odc-full-width col-sm-4">
+      <input type="number" matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
+      <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+      <mat-error *ngIf="secondFormGroup.get('zip').hasError('required')">Please enter a zipcode</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="odc-full-width row">
+    <mat-form-field class="odc-full-width col-sm-12">
+      <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
+      <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('required')">Please enter a phone number</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button matStepperNext class="float-right" [disabled]="!secondFormGroup.valid">Next</button>
+  </div>
+</form>

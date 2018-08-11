@@ -17,6 +17,10 @@ import { ActivateComponent } from './activate/activate.component';
 import { PersonDisplayComponent } from './person-display/person-display.component';
 import { DeleteUserModalComponent } from './modals/delete-user-modal/delete-user-modal.component';
 import { EmailValidationModalComponent } from './modals/email-validation-modal/email-validation-modal.component';
+import { StepOneComponent } from './step-one/step-one.component';
+import { StepTwoComponent } from './step-two/step-two.component';
+import { StepThreeComponent } from './step-three/step-three.component';
+import { StepFourComponent } from './step-four/step-four.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,11 @@ import { EmailValidationModalComponent } from './modals/email-validation-modal/e
     ActivateComponent,
     PersonDisplayComponent,
     DeleteUserModalComponent,
-    EmailValidationModalComponent
+    EmailValidationModalComponent,
+    StepOneComponent,
+    StepTwoComponent,
+    StepThreeComponent,
+    StepFourComponent
   ],
   imports: [
     BrowserModule,
