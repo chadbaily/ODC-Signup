@@ -5,12 +5,19 @@
       <ng-template matStepLabel>Create a login</ng-template>
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-xl-6">
-          <input matInput placeholder="Email" formControlName="email" required>
+          <input matInput type="email" placeholder="Email" formControlName="email" required>
+          <mat-error *ngIf="firstFormGroup.get('email').hasError('pattern')">Please enter a valid email</mat-error>
+          <mat-error *ngIf="firstFormGroup.get('email').hasError('required')">Please enter an email</mat-error>
         </mat-form-field>
         <mat-form-field class="odc-full-width col-xl-6">
           <input matInput placeholder="Enter your password" formControlName="password" [type]="hide ? 'password' : 'text'" required>
           <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          <mat-error *ngIf="firstFormGroup.get('password').hasError('required')">Please enter a password</mat-error>
         </mat-form-field>
+        <div class="alert alert-warning" role="alert">
+          Passwords are not encrypted. Do NOT use a password that you use elsewhere, such as the password to your email account. Create
+          a NEW password.
+        </div>
       </div>
       <div class="align-right">
         <button mat-button (click)="checkEmail(stepper)" [disabled]="!firstFormGroup.valid">Next</button>
@@ -23,10 +30,12 @@
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-sm-6">
           <input matInput placeholder="First name" formControlName="firstName" required>
+          <mat-error *ngIf="secondFormGroup.get('firstName').hasError('required')">Please enter a first name</mat-error>
         </mat-form-field>
 
         <mat-form-field class="odc-full-width col-sm-6">
           <input matInput placeholder="Last Name" formControlName="lastName" required>
+          <mat-error *ngIf="secondFormGroup.get('lastName').hasError('required')">Please enter a last name</mat-error>
         </mat-form-field>
       </div>
       <div class="odc-full-width row">
@@ -36,6 +45,7 @@
               {{ gender.viewValue }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="secondFormGroup.get('gender').hasError('required')">Please select a gender</mat-error>
         </mat-form-field>
       </div>
 
@@ -44,6 +54,7 @@
           <input matInput [matDatepicker]="picker" placeholder="Birthdate" formControlName="birthDate" required>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="secondFormGroup.get('birthDate').hasError('required')">Please select a birthdate</mat-error>
         </mat-form-field>
       </div>
 
@@ -54,33 +65,39 @@
               {{ studentOption.viewValue }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="secondFormGroup.get('student').hasError('required')">Please select a value</mat-error>
         </mat-form-field>
       </div>
 
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-sm-12">
           <input matInput placeholder="Address" formControlName="street" required>
+          <mat-error *ngIf="secondFormGroup.get('street').hasError('required')">Please enter a street</mat-error>
         </mat-form-field>
       </div>
 
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-sm-4">
           <input matInput placeholder="City" formControlName="city" required>
+          <mat-error *ngIf="secondFormGroup.get('city').hasError('required')">Please enter a city</mat-error>
         </mat-form-field>
 
         <mat-form-field class="odc-full-width col-sm-4">
           <input matInput placeholder="State" formControlName="state" required>
+          <mat-error *ngIf="secondFormGroup.get('state').hasError('required')">Please select a state</mat-error>
         </mat-form-field>
 
         <mat-form-field class="odc-full-width col-sm-4">
           <input type="number" matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
           <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+          <mat-error *ngIf="secondFormGroup.get('zip').hasError('required')">Please enter a zipcode</mat-error>
         </mat-form-field>
       </div>
 
       <div class="odc-full-width row">
         <mat-form-field class="odc-full-width col-sm-12">
           <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
+          <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('required')">Please enter a phone number</mat-error>
         </mat-form-field>
       </div>
 

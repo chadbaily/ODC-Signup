@@ -24,8 +24,11 @@ interface Error {
   providers: [MatStepper]
 })
 export class SignupComponent implements OnInit, AfterViewChecked {
+  // tslint:disable-next-line:max-line-length
+  private emailRegex: RegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gim;
+
   constructor(
-    private _formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     private router: Router,
     private http: HttpClient,
     public dialog: MatDialog
@@ -92,11 +95,11 @@ export class SignupComponent implements OnInit, AfterViewChecked {
   ];
 
   ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
-      email: [null, Validators.required],
+    this.firstFormGroup = this.formBuilder.group({
+      email: [null, [Validators.required, Validators.pattern(this.emailRegex)]],
       password: [null, Validators.required]
     });
-    this.secondFormGroup = this._formBuilder.group({
+    this.secondFormGroup = this.formBuilder.group({
       firstName: [null, Validators.required],
       lastName: [null, Validators.required],
       gender: [null, Validators.required],
@@ -108,10 +111,10 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       zip: [null, Validators.required],
       phoneNumber: [null, Validators.required]
     });
-    this.thirdFormGroup = this._formBuilder.group({
+    this.thirdFormGroup = this.formBuilder.group({
       waiver: [null, Validators.required]
     });
-    this.fourthFormGroup = this._formBuilder.group({
+    this.fourthFormGroup = this.formBuilder.group({
       plan: [null, Validators.required]
     });
   }

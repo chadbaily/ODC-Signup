@@ -56,16 +56,22 @@ app.post('/api/check-email', (req, res) => {
     function(err, result, fields) {
       if (err) console.error('ERROR: ', err);
       // Check to see if the email matches
-      if (result.length === 0) {
-        res.status(201).json({
-          message: 'Email not found'
-        });
+      if (result) {
+        if (result.length === 0) {
+          res.status(201).json({
+            message: 'Email not found'
+          });
+        } else {
+          res.status(201).json({
+            error: {
+              status: 'w',
+              message: 'Email already in use, please enter another'
+            }
+          });
+        }
       } else {
-        res.status(201).json({
-          error: {
-            status: 'w',
-            message: 'Email already in use, please enter another'
-          }
+        res.status(500).json({
+          message: 'Error Connecting to Database'
         });
       }
     }
