@@ -29,7 +29,7 @@ export interface UserProfile {
 export class DataAccessService {
   constructor() {}
 
-  private _userProfile$: BehaviorSubject<UserProfile>;
+  private _userProfile$ = new BehaviorSubject<UserProfile>(null);
   get userProfile$(): BehaviorSubject<UserProfile> {
     return this._userProfile$;
   }

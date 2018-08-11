@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { UserProfile } from '../dataAccess.service';
+import { UserProfile, DataAccessService } from '../dataAccess.service';
 
 declare let paypal: any;
 
@@ -48,8 +48,7 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then(payment => {
-        // TODO: FIX ME
-        // this.createDataModel();
+        this.createDataModel();
         this.http
           .post('/api/users', this.data)
           .subscribe(() => console.log('Added User!'));
@@ -61,7 +60,8 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dataAccess: DataAccessService
   ) {}
 
   ngOnInit() {
@@ -99,27 +99,28 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  /* private createDataModel() {
+  private createDataModel() {
+    const profile = this.dataAccess.userProfile$.getValue();
     this.data = {
-      email: this.firstFormGroup.get('email').value,
-      password: this.firstFormGroup.get('password').value,
-      firstName: this.secondFormGroup.get('firstName').value,
-      lastName: this.secondFormGroup.get('lastName').value,
-      gender: this.secondFormGroup.get('gender').value,
-      birthDate: this.secondFormGroup.get('birthDate').value,
-      uvaStudent: this.secondFormGroup.get('student').value,
-      addrStreet: this.secondFormGroup.get('street').value,
-      addrCity: this.secondFormGroup.get('city').value,
-      addrZip: this.secondFormGroup.get('zip').value,
-      addrState: this.secondFormGroup.get('state').value,
-      phoneNumber: this.secondFormGroup.get('phoneNumber').value,
-      hasAgreedToWaiver: this.thirdFormGroup.get('waiver').value,
-      agreedToWaiverTime: new Date(),
+      email: profile.email,
+      password: profile.password,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      birthDate: profile.birthDate,
+      uvaStudent: profile.uvaStudent,
+      addrStreet: profile.addrStreet,
+      addrCity: profile.addrCity,
+      addrZip: profile.addrZip,
+      addrState: profile.addrState,
+      phoneNumber: profile.phoneNumber,
+      hasAgreedToWaiver: profile.hasAgreedToWaiver,
+      agreedToWaiverTime: profile.agreedToWaiverTime,
       membershipType: {
         pricePaid: this.fourthFormGroup.get('plan').value,
         type: this.determineMembershipPrice()
       },
       isActiveOnWeb: false
     };
-  } */
+  }
 }

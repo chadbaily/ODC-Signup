@@ -17,10 +17,11 @@ import { ActivateComponent } from './activate/activate.component';
 import { PersonDisplayComponent } from './person-display/person-display.component';
 import { DeleteUserModalComponent } from './modals/delete-user-modal/delete-user-modal.component';
 import { EmailValidationModalComponent } from './modals/email-validation-modal/email-validation-modal.component';
-import { StepOneComponent } from './step-one/step-one.component';
-import { StepTwoComponent } from './step-two/step-two.component';
-import { StepThreeComponent } from './step-three/step-three.component';
-import { StepFourComponent } from './step-four/step-four.component';
+import { StepOneComponent } from './login/step-one.component';
+import { StepTwoComponent } from './address/step-two.component';
+import { StepThreeComponent } from './waiver/step-three.component';
+import { StepFourComponent } from './payment/step-four.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { StepFourComponent } from './step-four/step-four.component';
     StepOneComponent,
     StepTwoComponent,
     StepThreeComponent,
-    StepFourComponent
+    StepFourComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

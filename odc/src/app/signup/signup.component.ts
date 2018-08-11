@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
-import { StepOneComponent } from '../step-one/step-one.component';
-import { StepTwoComponent } from '../step-two/step-two.component';
-import { StepThreeComponent } from '../step-three/step-three.component';
-import { StepFourComponent } from '../step-four/step-four.component';
+import { StepOneComponent } from '../login/step-one.component';
+import { StepTwoComponent } from '../address/step-two.component';
+import { StepThreeComponent } from '../waiver/step-three.component';
+import { StepFourComponent } from '../payment/step-four.component';
 
 @Component({
   selector: 'app-signup',
@@ -32,8 +31,11 @@ export class SignupComponent implements OnInit {
   @ViewChild(StepTwoComponent) stepTwoComponent: StepTwoComponent;
   @ViewChild(StepThreeComponent) stepThreeComponent: StepThreeComponent;
   @ViewChild(StepFourComponent) stepFourComponent: StepFourComponent;
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  constructor() {}
-
-  ngOnInit() {}
+  ngOnInit() {
+    this.cdr.detectChanges();
+  }
 }

@@ -1,11 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { MatStepper } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { DataAccessService } from '../dataAccess.service';
 @Component({
   selector: 'app-step-two',
   templateUrl: './step-two.component.html'
@@ -30,9 +29,33 @@ export class StepTwoComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
-    private http: HttpClient
+    private dataAccess: DataAccessService
   ) {}
+
+  submit() {
+    const profile = this.dataAccess.userProfile$.getValue();
+    this.dataAccess.userProfile$.next({
+      email: profile.email,
+      password: profile.password,
+      firstName: this.secondFormGroup.get('firstName').value,
+      lastName: this.secondFormGroup.get('lastName').value,
+      gender: this.secondFormGroup.get('gender').value,
+      birthDate: this.secondFormGroup.get('birthDate').value,
+      uvaStudent: this.secondFormGroup.get('student').value,
+      addrStreet: this.secondFormGroup.get('street').value,
+      addrCity: this.secondFormGroup.get('city').value,
+      addrZip: this.secondFormGroup.get('zip').value,
+      addrState: this.secondFormGroup.get('state').value,
+      phoneNumber: this.secondFormGroup.get('phoneNumber').value,
+      hasAgreedToWaiver: null,
+      agreedToWaiverTime: null,
+      membershipType: {
+        pricePaid: null,
+        type: null
+      },
+      isActiveOnWeb: false
+    });
+  }
 
   ngOnInit() {
     this.secondFormGroup = this.formBuilder.group({
@@ -43,7 +66,10 @@ export class StepTwoComponent implements OnInit {
       student: [null, Validators.required],
       street: [null, Validators.required],
       city: [null, Validators.required],
-      state: [null, Validators.required],
+      state: [
+        null,
+        Validators.compose([Validators.required, Validators.maxLength(2)])
+      ],
       zip: [null, Validators.required],
       phoneNumber: [null, Validators.required]
     });

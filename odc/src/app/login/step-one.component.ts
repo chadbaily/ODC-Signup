@@ -4,6 +4,7 @@ import { MatDialog, MatStepper } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { EmailValidationModalComponent } from '../modals/email-validation-modal/email-validation-modal.component';
+import { DataAccessService } from '../dataAccess.service';
 
 interface ErrorContent {
   status: string;
@@ -30,13 +31,38 @@ export class StepOneComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private formBuilder: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private dataAccess: DataAccessService
   ) {}
 
   ngOnInit() {
     this.firstFormGroup = this.formBuilder.group({
       email: [null, [Validators.required, Validators.pattern(this.emailRegex)]],
       password: [null, Validators.required]
+    });
+  }
+
+  submit() {
+    this.dataAccess.userProfile$.next({
+      email: this.firstFormGroup.get('email').value,
+      password: this.firstFormGroup.get('password').value,
+      firstName: null,
+      lastName: null,
+      gender: null,
+      birthDate: null,
+      uvaStudent: null,
+      addrStreet: null,
+      addrCity: null,
+      addrZip: null,
+      addrState: null,
+      phoneNumber: null,
+      hasAgreedToWaiver: null,
+      agreedToWaiverTime: null,
+      membershipType: {
+        pricePaid: null,
+        type: null
+      },
+      isActiveOnWeb: false
     });
   }
 
@@ -54,9 +80,11 @@ export class StepOneComponent implements OnInit {
             data: errorResult.error.message
           });
         } else {
+          this.submit();
           stepper.next();
         }
       } else {
+        this.submit();
         stepper.next();
       }
     });
