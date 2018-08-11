@@ -5,6 +5,9 @@ https://letsencrypt.org/getting-started/
 
 https://github.com/casperjs/casperjs/issues/1355
 
+Link to stepper
+https://stackoverflow.com/questions/48498966/angular-material-stepper-component-for-each-step?rq=1
+
 
 Build Angular server:
 docker build -t angular-client:dev .
