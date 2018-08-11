@@ -15,7 +15,8 @@ import {
   MatStepperModule,
   MatTableModule,
   MatCheckboxModule,
-  MatDialogModule
+  MatDialogModule,
+  MatAutocompleteModule
 } from '@angular/material';
 
 @NgModule({
@@ -34,7 +35,8 @@ import {
     MatStepperModule,
     MatTableModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatButtonModule,
@@ -51,7 +53,8 @@ import {
     MatStepperModule,
     MatTableModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule {}

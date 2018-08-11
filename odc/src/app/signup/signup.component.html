@@ -82,8 +82,15 @@
           <mat-error *ngIf="secondFormGroup.get('city').hasError('required')">Please enter a city</mat-error>
         </mat-form-field>
 
+        <!-- <input matInput placeholder="State" formControlName="state" required> -->
+
         <mat-form-field class="odc-full-width col-sm-4">
-          <input matInput placeholder="State" formControlName="state" required>
+          <input type="text" placeholder="State" aria-label="Number" matInput [formControl]="state" [matAutocomplete]="auto" required>
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="stateOptions">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
           <mat-error *ngIf="secondFormGroup.get('state').hasError('required')">Please select a state</mat-error>
         </mat-form-field>
 

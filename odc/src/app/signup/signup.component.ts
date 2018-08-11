@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { MatDialog, MatStepper } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 import { UserProfile } from '../dataAccess.service';
 import { EmailValidationModalComponent } from '../modals/email-validation-modal/email-validation-modal.component';
 
@@ -24,16 +27,6 @@ interface Error {
   providers: [MatStepper]
 })
 export class SignupComponent implements OnInit, AfterViewChecked {
-  // tslint:disable-next-line:max-line-length
-  private emailRegex: RegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gim;
-
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private http: HttpClient,
-    public dialog: MatDialog
-  ) {}
-
   public hide = true;
   public firstFormGroup: FormGroup;
   public secondFormGroup: FormGroup;
@@ -41,6 +34,23 @@ export class SignupComponent implements OnInit, AfterViewChecked {
   public fourthFormGroup: FormGroup;
   public data: UserProfile;
   public paypalLoad = true;
+  public genders = [
+    { value: 'male', viewValue: 'Male' },
+    { value: 'female', viewValue: 'Female' }
+  ];
+
+  public studentOptions = [
+    { value: 'yes', viewValue: 'Yes' },
+    { value: 'no', viewValue: 'No' }
+  ];
+
+  public memberships = [
+    { value: '30', viewValue: 'Semester (5-Month) Membership ($30)' },
+    { value: '50', viewValue: 'Yearly (12-month) Membership ($50)' }
+  ];
+  public filteredOptions: Observable<string[]>;
+
+  public stateOptions = this.setStates();
 
   // private API = this.dataAccess.API;
   private addScript = false;
@@ -79,20 +89,14 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     }
   };
 
-  public genders = [
-    { value: 'male', viewValue: 'Male' },
-    { value: 'female', viewValue: 'Female' }
-  ];
-
-  public studentOptions = [
-    { value: 'yes', viewValue: 'Yes' },
-    { value: 'no', viewValue: 'No' }
-  ];
-
-  public memberships = [
-    { value: '30', viewValue: 'Semester (5-Month) Membership ($30)' },
-    { value: '50', viewValue: 'Yearly (12-month) Membership ($50)' }
-  ];
+  // tslint:disable-next-line:max-line-length
+  private emailRegex: RegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gim;
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private http: HttpClient,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.firstFormGroup = this.formBuilder.group({
@@ -117,6 +121,11 @@ export class SignupComponent implements OnInit, AfterViewChecked {
     this.fourthFormGroup = this.formBuilder.group({
       plan: [null, Validators.required]
     });
+
+    this.filteredOptions = this.secondFormGroup.get('state').valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -150,6 +159,7 @@ export class SignupComponent implements OnInit, AfterViewChecked {
       addrStreet: this.secondFormGroup.get('street').value,
       addrCity: this.secondFormGroup.get('city').value,
       addrZip: this.secondFormGroup.get('zip').value,
+      addrState: this.secondFormGroup.get('state').value,
       phoneNumber: this.secondFormGroup.get('phoneNumber').value,
       hasAgreedToWaiver: this.thirdFormGroup.get('waiver').value,
       agreedToWaiverTime: new Date(),
@@ -191,5 +201,80 @@ export class SignupComponent implements OnInit, AfterViewChecked {
         stepper.next();
       }
     });
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.stateOptions.filter(
+      option => option.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  private setStates(): string[] {
+    return [
+      'AL',
+      'AK',
+      'AZ',
+      'AR',
+      'CA',
+      'CO',
+      'CT',
+      'DE',
+      'FL',
+      'GA',
+      'HI',
+      'ID',
+      'IL',
+      'IN',
+      'IA',
+      'KS',
+      'KY',
+      'LA',
+      'ME',
+      'MD',
+      'MA',
+      'MI',
+      'MN',
+      'MS',
+      'MO',
+      'MT',
+      'NE',
+      'NV',
+      'NH',
+      'NJ',
+      'NM',
+      'NY',
+      'NC',
+      'ND',
+      'OH',
+      'OK',
+      'OR',
+      'PA',
+      'RI',
+      'SC',
+      'SD',
+      'TN',
+      'TX',
+      'UT',
+      'VT',
+      'VA',
+      'WA',
+      'WV',
+      'WI',
+      'WY',
+      'AS',
+      'DC',
+      'FM',
+      'GU',
+      'MH',
+      'MP',
+      'PW',
+      'PR',
+      'VI',
+      'AE',
+      'AA',
+      'AP'
+    ];
   }
 }

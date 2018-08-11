@@ -17,6 +17,7 @@ export interface UserProfile {
   addrStreet: string;
   addrCity: string;
   addrZip: number;
+  addrState: string;
   phoneNumber: string;
   hasAgreedToWaiver: boolean;
   agreedToWaiverTime: Date;
