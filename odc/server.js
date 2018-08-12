@@ -82,34 +82,58 @@ app.post('/api/check-email', (req, res) => {
 });
 
 app.post('/api/activate', (req, res) => {
-  console.log(req.body.data);
   var XHR = new XMLHttpRequest();
   const urlEncodedData = req.body.converted;
-  // Define what happens on successful data submission
-  XHR.addEventListener('load', function(event) {
-    console.warn('Yeah! Data sent and response loaded.');
-  });
+  /**
+   * Adds a new user on the ODC website
+   */
+  // // Define what happens on successful data submission
+  // XHR.addEventListener('load', function(event) {
+  //   console.warn('Yeah! Data sent and response loaded.');
+  // });
 
-  // Define what happens in case of error
-  XHR.addEventListener('error', function(event) {
-    console.warn('Oops! Something goes wrong.');
-  });
+  // // Define what happens in case of error
+  // XHR.addEventListener('error', function(event) {
+  //   console.warn('Oops! Something goes wrong.');
+  // });
 
-  // Set up our request
-  XHR.open('POST', 'http://www.outdoorsatuva.org/members/join');
+  // // Set up our request
+  // XHR.open('POST', 'http://www.outdoorsatuva.org/members/join');
 
-  // Add the required HTTP header for form data POST requests
-  XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  // // Add the required HTTP header for form data POST requests
+  // XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-  // Finally, send our data.
+  // // Finally, send our data.
   // XHR.send(urlEncodedData);
 
+  // mongoose.connection.db
+  //   .collection('users')
+  //   .find({ email: req.body.raw.email })
+  //   .toArray(function(err, docs) {
+  //     console.log('Found the following records');
+  //     console.log(docs);
+  //     // callback(docs);
+  //   });
+
+  /**
+   * Finds a user based on email and sets their status to active on the odc site
+   */
+  mongoose.connection.db.collection('users').updateOne(
+    { email: req.body.raw.email },
+    { $set: { isActiveOnWeb: true } },
+    function(err, result) {
+      if (err) {
+        console.error(err);
+      }
+      console.log('Updated the document with the field');
+    },
+    { upsert: true }
+  );
+
   res.status(201).json({
-    message: 'User added on ODC!'
+    message: 'User added on ODC and status updated'
     // data: jsonToURI(user)
   });
-  console.log(req.raw._id);
-  // mongoose.user.update({_id = req.raw._id},{});
 });
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
@@ -119,14 +143,3 @@ app.get('*', (req, res) => {
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
-
-function jsonToURI(json) {
-  return encodeURIComponent(JSON.stringify(json));
-}
-
-function sendPost(data) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://www.outdoorsatuva.org/members/join', true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.send(data);
-}
