@@ -5,6 +5,8 @@ import { ActivateComponent } from '../activate/activate.component';
 import { MatDialog } from '../../../node_modules/@angular/material';
 import { DeleteUserModalComponent } from '../modals/delete-user-modal/delete-user-modal.component';
 
+import * as moment from 'moment';
+
 interface BrokenPhoneNumber {
   areaCode: string;
   exchange: string;
@@ -19,6 +21,7 @@ export class PersonDisplayComponent implements OnInit {
   @Input()
   person: UserProfile;
   // private API = this.dataAccess.API;
+  public moment = moment;
 
   constructor(
     private http: HttpClient,
@@ -30,10 +33,13 @@ export class PersonDisplayComponent implements OnInit {
   ngOnInit() {}
 
   activate() {
-    const personPayload = this.convertPerson(this.person);
+    const personPayload: any = {
+      converted: this.convertPerson(this.person),
+      raw: this.person
+    };
     this.http
-      .post('/api/activate', this.person)
-      .subscribe(() => console.log('Person created!', personPayload));
+      .post('/api/activate', personPayload)
+      .subscribe(() => console.log('Person created!'));
     this.parent.getAllPeople();
   }
 
@@ -43,7 +49,6 @@ export class PersonDisplayComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed: ', result);
       if (result) {
         this.http
           .post('/api/deleteUser', this.person)
@@ -56,11 +61,11 @@ export class PersonDisplayComponent implements OnInit {
   private convertPerson(data: UserProfile): string {
     const phoneNumber = this.breakPhoneNumber(data.phoneNumber);
     const membershipType = this.determineMembershipType(
-      data.membershipType.type
+      data.membershipType.pricePaid
     );
     const newPerson =
       // tslint:disable-next-line:max-line-length
-      'form-name=' +
+      'form-name=1' +
       '&firstName=' +
       data.firstName +
       '&lastName=' +
@@ -70,7 +75,7 @@ export class PersonDisplayComponent implements OnInit {
       '&student=' +
       data.uvaStudent +
       '&dob=' +
-      data.birthDate +
+      moment(data.birthDate).format('YYYY-MM-DD') +
       '&emailAddress=' +
       data.email +
       '&confirmEmailAddress=' +

@@ -122,5 +122,6 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
       },
       isActiveOnWeb: false
     };
+    console.log(this.dataAccess.userProfile$.getValue());
   }
 }

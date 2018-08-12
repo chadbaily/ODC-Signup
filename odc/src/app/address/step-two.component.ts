@@ -41,7 +41,6 @@ export class StepTwoComponent implements OnInit {
     const date = moment(this.secondFormGroup.get('birthDate').value).format(
       'YYYY-MM-DD'
     );
-    console.log(date);
     this.dataAccess.userProfile$.next({
       email: profile.email,
       password: profile.password,

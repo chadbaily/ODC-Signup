@@ -10,7 +10,8 @@ import { DataAccessService } from '../dataAccess.service';
 export class StepThreeComponent implements OnInit {
   public thirdFormGroup: FormGroup;
 
-  @Input() stepper: MatStepper;
+  @Input()
+  stepper: MatStepper;
 
   constructor(
     private formBuilder: FormBuilder,

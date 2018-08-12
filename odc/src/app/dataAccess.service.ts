@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface Membership {
   type: string;
-  pricePaid: number;
+  pricePaid: string;
 }
 
 export interface UserProfile {

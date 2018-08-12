@@ -5,7 +5,7 @@ const router = express.Router();
 
 const Membership = new mongoose.Schema({
   type: String,
-  pricePaid: Number
+  pricePaid: String
 });
 
 // create mongoose schema
@@ -15,11 +15,12 @@ const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   gender: String,
-  birthDate: Date,
-  uvaStudent: Boolean,
+  birthDate: String,
+  uvaStudent: Number,
   addrStreet: String,
   addrCity: String,
   addrZip: Number,
+  addrState: String,
   phoneNumber: String,
   hasAgreedToWaiver: Boolean,
   agreedToWaiverTime: Date,

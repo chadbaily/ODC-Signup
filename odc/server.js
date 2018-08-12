@@ -10,6 +10,7 @@ var methodOverride = require('method-override');
 const path = require('path');
 const http = require('http');
 var mysql = require('mysql');
+var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 var exec = require('child_process').exec;
 var shellescape = require('shell-escape');
@@ -38,8 +39,9 @@ app.use('/api', api);
 // Check if email is already in use
 app.post('/api/check-email', (req, res) => {
   // Connect to DB
+  // host: process.env.MYSQLHOST || 'localhost' || '192.168.99.100',
   let mysqlDB = mysql.createConnection({
-    host: process.env.MYSQLHOST || 'localhost',
+    host: process.env.MYSQLHOST || '192.168.99.100',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASS || 'my-secret-pw',
     database: process.env.MYSQLDATABASE || 'main'
@@ -80,29 +82,34 @@ app.post('/api/check-email', (req, res) => {
 });
 
 app.post('/api/activate', (req, res) => {
-  const user = {
-    email: req.body.email,
-    password: req.body.password,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    gender: req.body.gender,
-    birthDate: req.body.birthDate,
-    uvaStudent: req.body.uvaStudent,
-    addrStreet: req.body.addrStreet,
-    addrCity: req.body.addrCity,
-    addrZip: req.body.addrZip,
-    phoneNumber: req.body.phoneNumber,
-    hasAgreedToWaiver: req.body.hasAgreedToWaiver,
-    agreedToWaiverTime: req.body.agreedToWaiverTime,
-    membershipType: req.body.membershipType
-  };
-  console.log(req.body);
-  // if (error) res.status(500).send(error);
+  console.log(req.body.data);
+  var XHR = new XMLHttpRequest();
+  const urlEncodedData = req.body.converted;
+  // Define what happens on successful data submission
+  XHR.addEventListener('load', function(event) {
+    console.warn('Yeah! Data sent and response loaded.');
+  });
+
+  // Define what happens in case of error
+  XHR.addEventListener('error', function(event) {
+    console.warn('Oops! Something goes wrong.');
+  });
+
+  // Set up our request
+  XHR.open('POST', 'http://www.outdoorsatuva.org/members/join');
+
+  // Add the required HTTP header for form data POST requests
+  XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  // Finally, send our data.
+  // XHR.send(urlEncodedData);
 
   res.status(201).json({
-    message: 'User added on ODC!',
-    data: jsonToURI(user)
+    message: 'User added on ODC!'
+    // data: jsonToURI(user)
   });
+  console.log(req.raw._id);
+  // mongoose.user.update({_id = req.raw._id},{});
 });
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
@@ -121,5 +128,5 @@ function sendPost(data) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', 'http://www.outdoorsatuva.org/members/join', true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.send(jsonToURI(data));
+  xhr.send(data);
 }
