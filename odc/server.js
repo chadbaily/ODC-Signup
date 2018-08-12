@@ -94,7 +94,13 @@ app.post('/api/activate', (req, res) => {
 
   // // Define what happens in case of error
   // XHR.addEventListener('error', function(event) {
-  //   console.warn('Oops! Something goes wrong.');
+  //   res.status(201).json({
+  //     error: {
+  //       status: 'w',
+  //       message: 'Failed to activate'
+  //     }
+  //   });
+  //   console.warn('Oops! Something went very wrong.');
   // });
 
   // // Set up our request

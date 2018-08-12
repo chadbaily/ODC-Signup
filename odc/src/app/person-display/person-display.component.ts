@@ -6,11 +6,21 @@ import { MatDialog } from '../../../node_modules/@angular/material';
 import { DeleteUserModalComponent } from '../modals/delete-user-modal/delete-user-modal.component';
 
 import * as moment from 'moment';
+import { EmailValidationModalComponent } from '../modals/email-validation-modal/email-validation-modal.component';
 
 interface BrokenPhoneNumber {
   areaCode: string;
   exchange: string;
   number: string;
+}
+
+interface ErrorContent {
+  status: string;
+  message: string;
+}
+
+interface Error {
+  error: ErrorContent;
 }
 
 @Component({
@@ -37,9 +47,18 @@ export class PersonDisplayComponent implements OnInit {
       converted: this.convertPerson(this.person),
       raw: this.person
     };
-    this.http
-      .post('/api/activate', personPayload)
-      .subscribe(() => console.log('Person created!'));
+    this.http.post('/api/activate', personPayload).subscribe(result => {
+      if (result) {
+        // console.log('Made it into result');
+        if (result.hasOwnProperty('error')) {
+          const errorResult = result as Error;
+          this.dialog.open(EmailValidationModalComponent, {
+            width: '250px',
+            data: errorResult.error.message
+          });
+        }
+      }
+    });
     this.parent.getAllPeople();
   }
 
