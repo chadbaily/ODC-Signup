@@ -38,16 +38,6 @@ class Database {
       });
     });
   }
-  execute(config, callback) {
-    const database = new Database(config);
-    return callback(database).then(
-      result => database.close().then(() => result),
-      err =>
-        database.close().then(() => {
-          throw err;
-        })
-    );
-  }
 }
 
 // app.use(express.static("./public")); // set the static files location /public/img will be /img for users
@@ -152,93 +142,71 @@ app.post('/api/activate', (req, res) => {
   //   });
   // Connect to DB
   // host: process.env.MYSQLHOST || 'localhost' || '192.168.99.100',
-  let mysqlDB = new Database({
+  // let mysqlDB = new Database({
+  //   host: process.env.MYSQLHOST || 'localhost',
+  //   user: process.env.MYSQLUSER || 'root',
+  //   password: process.env.MYSQLPASS || 'my-secret-pw',
+  //   database: process.env.MYSQLDATABASE || 'main'
+  // });
+
+  // Check if email is there
+  const email = req.body.raw.email;
+  c_uid = 0;
+  mysqlDB = new Database({
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASS || 'my-secret-pw',
     database: process.env.MYSQLDATABASE || 'main'
   });
-
-  // Check if email is there
-  const email = req.body.raw.email;
-  c_uid = 0;
-
-  // mysqlDB
-  //   .execute(config, database =>
-  //     database
-  //       .query('SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"')
-  //       .then(rows => {
-  //         console.log('1st query', rows);
-  //         c_uid = rows[0].c_uid;
-  //         return database.query(
-  //           `SELECT * FROM m_membership where c_member = ${c_uid}`
-  //         );
-  //       })
-  //       .then(rows => {
-  //         otherRows = rows;
-  //       })
-  //   )
-  //   .then(() => {
-  //     // do something with someRows and otherRows
-  //   })
-  //   .catch(err => {
-  //     // handle the error
-  //   });
-
   mysqlDB
     .query('SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"')
     .then(rows => {
       console.log('1st query', rows);
       c_uid = rows[0].c_uid;
       return mysqlDB.query(
-        `SELECT * FROM m_membership where c_member = ${c_uid}`
+        `UPDATE m_membership SET c_status = 4 WHERE c_member = ${c_uid}`
       );
     })
     .then(
       rows => {
         console.log('2nd query', rows);
-        return database.close();
+        return mysqlDB.close();
       },
       err => {
-        return database.close().then(() => {
+        return mysqlDB.close().then(() => {
           throw err;
         });
       }
     )
     .then(() => {
-      // do something with someRows and otherRows
+      // What happens with the local variables we made
+      /**
+       * Finds a user based on email and sets their status to active on the odc site
+       */
+      mongoose.connection.db.collection('users').updateOne(
+        { email: req.body.raw.email },
+        { $set: { isActiveOnWeb: true } },
+        function(err, result) {
+          if (err) {
+            console.error(err);
+          }
+          console.log('Updated the document with the field');
+        },
+        { upsert: true }
+      );
+
+      res.status(201).json({
+        message: 'User added on ODC and status updated'
+        // data: jsonToURI(user)
+      });
     })
     .catch(err => {
       // handle the error
       if (err) {
-        // res.status(201).json({
-        //   error: {
-        //     status: 'w',
-        //     message: 'Failed to activate'
-        //   }
-        // });
+        console.warn(err);
+        // TODO: Add some logging here
       }
     });
-
-  /**
-   * Finds a user based on email and sets their status to active on the odc site
-   */
-  mongoose.connection.db.collection('users').updateOne(
-    { email: req.body.raw.email },
-    { $set: { isActiveOnWeb: true } },
-    function(err, result) {
-      if (err) {
-        console.error(err);
-      }
-      console.log('Updated the document with the field');
-    },
-    { upsert: true }
-  );
-
-  res.status(201).json({
-    message: 'User added on ODC and status updated'
-    // data: jsonToURI(user)
-  });
 });
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
