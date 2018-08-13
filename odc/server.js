@@ -17,6 +17,39 @@ mongoose.connect(process.env.MONGOLAB_SILVER_URI || database.localUrl),
   { useNewUrlParser: true }; // Connect to local MongoDB instance. A remoteUrl is also available (modulus.io)
 mongoose.connection.on('error', console.error.bind(console, 'Mongo Error: '));
 
+/* Set up the database class */
+class Database {
+  constructor(config) {
+    this.connection = mysql.createConnection(config);
+  }
+  query(sql, args) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(sql, args, (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
+      });
+    });
+  }
+  close() {
+    return new Promise((resolve, reject) => {
+      this.connection.end(err => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+  }
+  execute(config, callback) {
+    const database = new Database(config);
+    return callback(database).then(
+      result => database.close().then(() => result),
+      err =>
+        database.close().then(() => {
+          throw err;
+        })
+    );
+  }
+}
+
 // app.use(express.static("./public")); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({ extended: 'true' })); // parse application/x-www-form-urlencoded
@@ -119,55 +152,73 @@ app.post('/api/activate', (req, res) => {
   //   });
   // Connect to DB
   // host: process.env.MYSQLHOST || 'localhost' || '192.168.99.100',
-  let mysqlDB = mysql.createConnection({
+  let mysqlDB = new Database({
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASS || 'my-secret-pw',
     database: process.env.MYSQLDATABASE || 'main'
   });
-  mysqlDB.connect(function(err) {
-    if (err) console.error.bind(console, 'MySql Error: ', err);
-    // console.log('MySql Connected!');
-  });
+
   // Check if email is there
   const email = req.body.raw.email;
   c_uid = 0;
-  mysqlDB.query(
-    'SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"',
-    function(err, result, fields) {
-      if (err) console.error('ERROR: ', err);
-      // Check to see if the email matches
-      if (result) {
-        // identifier
-        // console.log('c_uid from result: ', result[0].c_uid);
-        c_uid = result[0].c_uid;
-        // console.log('c_uid 1st: ', c_uid);
-      } else {
-        res.status(500).json({
-          message: 'Error Connecting to Database'
+
+  // mysqlDB
+  //   .execute(config, database =>
+  //     database
+  //       .query('SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"')
+  //       .then(rows => {
+  //         console.log('1st query', rows);
+  //         c_uid = rows[0].c_uid;
+  //         return database.query(
+  //           `SELECT * FROM m_membership where c_member = ${c_uid}`
+  //         );
+  //       })
+  //       .then(rows => {
+  //         otherRows = rows;
+  //       })
+  //   )
+  //   .then(() => {
+  //     // do something with someRows and otherRows
+  //   })
+  //   .catch(err => {
+  //     // handle the error
+  //   });
+
+  mysqlDB
+    .query('SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"')
+    .then(rows => {
+      console.log('1st query', rows);
+      c_uid = rows[0].c_uid;
+      return mysqlDB.query(
+        `SELECT * FROM m_membership where c_member = ${c_uid}`
+      );
+    })
+    .then(
+      rows => {
+        console.log('2nd query', rows);
+        return database.close();
+      },
+      err => {
+        return database.close().then(() => {
+          throw err;
         });
       }
-    }
-  );
-  // console.log('here', identifier);
-  // Now use the c_uid to
-  mysqlDB.query(
-    'UPDATE `m_membership` SET c_status = 4 WHERE c_member = ' + c_uid,
-    function(err, result, fields) {
-      if (err) console.error('ERROR: ', err);
-      // Check to see if the email matches
-      if (result) {
-        //   identifier = result[0].c_uid;
-        console.log('c_uid 2nd:', c_uid);
-        console.log(result);
-      } else {
-        res.status(500).json({
-          message: 'Error Connecting to Database'
-        });
+    )
+    .then(() => {
+      // do something with someRows and otherRows
+    })
+    .catch(err => {
+      // handle the error
+      if (err) {
+        // res.status(201).json({
+        //   error: {
+        //     status: 'w',
+        //     message: 'Failed to activate'
+        //   }
+        // });
       }
-    }
-  );
-  mysqlDB.end();
+    });
 
   /**
    * Finds a user based on email and sets their status to active on the odc site
