@@ -15,6 +15,9 @@ https://stackoverflow.com/questions/28515292/how-to-fill-a-select-element-which-
 Mongo Node
 https://github.com/mongodb/node-mongodb-native#find-and-modify
 
+Promise Statements
+https://codeburst.io/node-js-mysql-and-promises-4c3be599909b
+
 Build Angular server:
 docker build -t angular-client:dev .
 docker run --name angular-client -p 4200:4200 angular-client:dev
