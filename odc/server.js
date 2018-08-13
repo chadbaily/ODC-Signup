@@ -12,9 +12,6 @@ const http = require('http');
 var mysql = require('mysql');
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
-var exec = require('child_process').exec;
-var shellescape = require('shell-escape');
-
 // configuration ===============================================================
 mongoose.connect(process.env.MONGOLAB_SILVER_URI || database.localUrl),
   { useNewUrlParser: true }; // Connect to local MongoDB instance. A remoteUrl is also available (modulus.io)
@@ -41,7 +38,7 @@ app.post('/api/check-email', (req, res) => {
   // Connect to DB
   // host: process.env.MYSQLHOST || 'localhost' || '192.168.99.100',
   let mysqlDB = mysql.createConnection({
-    host: process.env.MYSQLHOST || '192.168.99.100',
+    host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASS || 'my-secret-pw',
     database: process.env.MYSQLDATABASE || 'main'
@@ -120,6 +117,57 @@ app.post('/api/activate', (req, res) => {
   //     console.log(docs);
   //     // callback(docs);
   //   });
+  // Connect to DB
+  // host: process.env.MYSQLHOST || 'localhost' || '192.168.99.100',
+  let mysqlDB = mysql.createConnection({
+    host: process.env.MYSQLHOST || 'localhost',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASS || 'my-secret-pw',
+    database: process.env.MYSQLDATABASE || 'main'
+  });
+  mysqlDB.connect(function(err) {
+    if (err) console.error.bind(console, 'MySql Error: ', err);
+    // console.log('MySql Connected!');
+  });
+  // Check if email is there
+  const email = req.body.raw.email;
+  c_uid = 0;
+  mysqlDB.query(
+    'SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"',
+    function(err, result, fields) {
+      if (err) console.error('ERROR: ', err);
+      // Check to see if the email matches
+      if (result) {
+        // identifier
+        // console.log('c_uid from result: ', result[0].c_uid);
+        c_uid = result[0].c_uid;
+        // console.log('c_uid 1st: ', c_uid);
+      } else {
+        res.status(500).json({
+          message: 'Error Connecting to Database'
+        });
+      }
+    }
+  );
+  // console.log('here', identifier);
+  // Now use the c_uid to
+  mysqlDB.query(
+    'UPDATE `m_membership` SET c_status = 4 WHERE c_member = ' + c_uid,
+    function(err, result, fields) {
+      if (err) console.error('ERROR: ', err);
+      // Check to see if the email matches
+      if (result) {
+        //   identifier = result[0].c_uid;
+        console.log('c_uid 2nd:', c_uid);
+        console.log(result);
+      } else {
+        res.status(500).json({
+          message: 'Error Connecting to Database'
+        });
+      }
+    }
+  );
+  mysqlDB.end();
 
   /**
    * Finds a user based on email and sets their status to active on the odc site

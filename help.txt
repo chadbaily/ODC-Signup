@@ -42,3 +42,7 @@ docker system prune -
 Deploy to heroku
 heroku container:push web
 heroku container:release web
+
+
+SELECT c_uid FROM `m_member` WHERE c_email=
+UPDATE `m_membership` SET `c_status` = 4 WHERE `c_member`=
