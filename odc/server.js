@@ -102,53 +102,8 @@ app.post('/api/check-email', (req, res) => {
 });
 
 app.post('/api/activate', (req, res) => {
-  var XHR = new XMLHttpRequest();
-  const urlEncodedData = req.body.converted;
-  /**
-   * Adds a new user on the ODC website
-   */
-  // // Define what happens on successful data submission
-  // XHR.addEventListener('load', function(event) {
-  //   console.warn('Yeah! Data sent and response loaded.');
-  // });
-
-  // // Define what happens in case of error
-  // XHR.addEventListener('error', function(event) {
-  //   res.status(201).json({
-  //     error: {
-  //       status: 'w',
-  //       message: 'Failed to activate'
-  //     }
-  //   });
-  //   console.warn('Oops! Something went very wrong.');
-  // });
-
-  // // Set up our request
-  // XHR.open('POST', 'http://www.outdoorsatuva.org/members/join');
-
-  // // Add the required HTTP header for form data POST requests
-  // XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-  // // Finally, send our data.
-  // XHR.send(urlEncodedData);
-
-  // mongoose.connection.db
-  //   .collection('users')
-  //   .find({ email: req.body.raw.email })
-  //   .toArray(function(err, docs) {
-  //     console.log('Found the following records');
-  //     console.log(docs);
-  //     // callback(docs);
-  //   });
-  // Connect to DB
-  // host: process.env.MYSQLHOST || 'localhost' || '192.168.99.100',
-  // let mysqlDB = new Database({
-  //   host: process.env.MYSQLHOST || 'localhost',
-  //   user: process.env.MYSQLUSER || 'root',
-  //   password: process.env.MYSQLPASS || 'my-secret-pw',
-  //   database: process.env.MYSQLDATABASE || 'main'
-  // });
-
+  addODCUserOnSite(req, res);
+  addNewUserToEmailList(req, res);
   // Check if email is there
   const email = req.body.raw.email;
   c_uid = 0;
@@ -216,3 +171,70 @@ app.get('*', (req, res) => {
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
+
+/**
+ * Adds a new user to ODC via post
+ * @param {*} req
+ * @param {*} res
+ */
+function addODCUserOnSite(req, res) {
+  var XHR = new XMLHttpRequest();
+  const urlEncodedData = req.body.converted;
+  /**
+   * Adds a new user on the ODC website
+   */
+  // Define what happens on successful data submission
+  XHR.addEventListener('load', function(event) {
+    console.warn('Yeah! Data sent and response loaded.');
+  });
+  // Define what happens in case of error
+  XHR.addEventListener('error', function(event) {
+    res.status(201).json({
+      error: {
+        status: 'w',
+        message: 'Failed to add user on odc site'
+      }
+    });
+    console.warn('Oops! Something went very wrong.');
+  });
+  // Set up our request
+  XHR.open('POST', 'http://www.outdoorsatuva.org/members/join');
+  // Add the required HTTP header for form data POST requests
+  XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  // Finally, send our data.
+  XHR.send(urlEncodedData);
+}
+
+/**
+ * Adds a new user to the email list via post
+ * @param {*} req
+ * @param {*} res
+ */
+function addNewUserToEmailList(req, res) {
+  var XHR = new XMLHttpRequest();
+  const email = req.body.raw.email;
+  /**
+   * Adds a new user on the ODC website
+   */
+  // Define what happens on successful data submission
+  XHR.addEventListener('load', function(event) {
+    console.warn('Yeah! Data sent and response loaded.');
+  });
+  // Define what happens in case of error
+  XHR.addEventListener('error', function(event) {
+    res.status(201).json({
+      error: {
+        status: 'w',
+        message: 'Failed to add user to email list'
+      }
+    });
+    console.warn('Oops! Something went very wrong.');
+  });
+  // Set up our request
+  XHR.open('POST', 'https://pairlist10.pair.net/mailman/subscribe/outdoors');
+  // Add the required HTTP header for form data POST requests
+  XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  // Finally, send our data.
+  const emailPayload = `digest=0&email=${email}&email-button=Subscribe`;
+  XHR.send(emailPayload);
+}
