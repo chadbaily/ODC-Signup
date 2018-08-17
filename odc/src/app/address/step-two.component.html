@@ -77,7 +77,9 @@
 
   <div class="odc-full-width row">
     <mat-form-field class="odc-full-width col-sm-12">
-      <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
+      <input matInput placeholder="Phone number" formControlName="phoneNumber" #phoneNumber required>
+      <mat-hint>Please use the format xxxxxxxxxx</mat-hint>
+      <mat-hint align="end">{{phoneNumber.value.length}} / 10</mat-hint>
       <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('required')">Please enter a phone number</mat-error>
       <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('minLength')">Please enter 10 digit phonenumber xxxxxxxxxx</mat-error>
       <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('maxLength')">Please enter 10 digit phonenumber xxxxxxxxxx</mat-error>
