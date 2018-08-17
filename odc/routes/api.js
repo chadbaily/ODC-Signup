@@ -36,9 +36,9 @@ router.get('/', (req, res) => {
   res.send('api works');
 });
 
-/* GET all users. */
+/* GET all unactive users. */
 router.get('/users', (req, res) => {
-  User.find({}, (err, users) => {
+  User.find({ isActiveOnWeb: false }, (err, users) => {
     if (err) res.status(500).send(error);
 
     res.status(200).json(users);

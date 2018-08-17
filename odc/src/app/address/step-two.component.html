@@ -26,6 +26,7 @@
       <input matInput [matDatepicker]="picker" placeholder="Birthdate" formControlName="birthDate" required>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+      <mat-hint>Please use MM/DD/YYYY format</mat-hint>
       <mat-error *ngIf="secondFormGroup.get('birthDate').hasError('required')">Please select a birthdate</mat-error>
     </mat-form-field>
   </div>
@@ -63,12 +64,14 @@
         </mat-option>
       </mat-autocomplete>
       <mat-error *ngIf="secondFormGroup.get('state').hasError('required')">Please select a state</mat-error>
+      <mat-error *ngIf="secondFormGroup.get('state').hasError('minLength') || secondFormGroup.get('state').hasError('maxLength')">Please use state abbreviation</mat-error>
     </mat-form-field>
 
     <mat-form-field class="odc-full-width col-sm-4">
-      <input type="number" matInput #postalCode maxlength="5" placeholder="Postal Code" formControlName="zip" required>
+      <input type="text" matInput #postalCode placeholder="Postal Code" formControlName="zip" required>
       <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
       <mat-error *ngIf="secondFormGroup.get('zip').hasError('required')">Please enter a zipcode</mat-error>
+      <mat-error *ngIf="secondFormGroup.get('zip').hasError('minLength') || secondFormGroup.get('zip').hasError('maxLength')">Please enter 5 digit zipcode</mat-error>
     </mat-form-field>
   </div>
 
@@ -76,6 +79,8 @@
     <mat-form-field class="odc-full-width col-sm-12">
       <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
       <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('required')">Please enter a phone number</mat-error>
+      <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('minLength')">Please enter 10 digit phonenumber xxxxxxxxxx</mat-error>
+      <mat-error *ngIf="secondFormGroup.get('phoneNumber').hasError('maxLength')">Please enter 10 digit phonenumber xxxxxxxxxx</mat-error>
     </mat-form-field>
   </div>
 

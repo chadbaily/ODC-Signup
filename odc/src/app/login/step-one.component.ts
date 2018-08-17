@@ -24,9 +24,10 @@ export class StepOneComponent implements OnInit {
   public firstFormGroup: FormGroup;
 
   // tslint:disable-next-line:max-line-length
-  private emailRegex: RegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gim;
+  private emailRegex: RegExp = /([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}/gim;
 
-  @Input() stepper: MatStepper;
+  @Input()
+  stepper: MatStepper;
 
   constructor(
     public dialog: MatDialog,

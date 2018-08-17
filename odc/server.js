@@ -40,6 +40,42 @@ class Database {
   }
 }
 
+class XMLPost {
+  constructor(name) {
+    this.appName = `${name}`;
+    this.XHR = new XMLHttpRequest();
+  }
+  post(data, url, res) {
+    return new Promise((resolve, reject) => {
+      // Define what happens on successful data submission
+      this.XHR.addEventListener('load', function(event) {
+        console.warn('Data sent');
+        resolve();
+      });
+      // Define what happens in case of error
+      this.XHR.addEventListener('error', function(event) {
+        res.status(201).json({
+          error: {
+            status: 'w',
+            message: 'Failed post'
+          }
+        });
+        console.warn('Oops! Something went very wrong!');
+        reject(event);
+      });
+      // Set up our request
+      this.XHR.open('POST', url);
+      // Add the required HTTP header for form data POST requests
+      this.XHR.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+      );
+      // Finally, send our data.
+      this.XHR.send(data);
+    });
+  }
+}
+
 // app.use(express.static("./public")); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({ extended: 'true' })); // parse application/x-www-form-urlencoded
@@ -102,65 +138,78 @@ app.post('/api/check-email', (req, res) => {
 });
 
 app.post('/api/activate', (req, res) => {
-  addODCUserOnSite(req, res);
-  addNewUserToEmailList(req, res);
-  // Check if email is there
-  const email = req.body.raw.email;
-  c_uid = 0;
-  mysqlDB = new Database({
-    host: process.env.MYSQLHOST || 'localhost',
-    user: process.env.MYSQLUSER || 'root',
-    password: process.env.MYSQLPASS || 'my-secret-pw',
-    database: process.env.MYSQLDATABASE || 'main'
-  });
-  mysqlDB
-    .query('SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"')
-    .then(rows => {
-      console.log('1st query', rows);
-      c_uid = rows[0].c_uid;
-      return mysqlDB.query(
-        `UPDATE m_membership SET c_status = 4 WHERE c_member = ${c_uid}`
-      );
-    })
-    .then(
-      rows => {
-        console.log('2nd query', rows);
-        return mysqlDB.close();
-      },
-      err => {
-        return mysqlDB.close().then(() => {
-          throw err;
-        });
-      }
-    )
+  // addODCUserOnSite(req, res);
+  // addNewUserToEmailList(req, res);
+  addODCUser = new XMLPost('Outdoors at UVA');
+  addODCUser
+    .post(req.body.converted, 'http://www.outdoorsatuva.org/members/join', res)
     .then(() => {
-      // What happens with the local variables we made
-      /**
-       * Finds a user based on email and sets their status to active on the odc site
-       */
-      mongoose.connection.db.collection('users').updateOne(
-        { email: req.body.raw.email },
-        { $set: { isActiveOnWeb: true } },
-        function(err, result) {
-          if (err) {
-            console.error(err);
-          }
-          console.log('Updated the document with the field');
-        },
-        { upsert: true }
+      addUserToEmail = new XMLPost('Pair Network');
+      return addUserToEmail.post(
+        req.body.raw.email,
+        'https://pairlist10.pair.net/mailman/subscribe/outdoors',
+        res
       );
-
-      res.status(201).json({
-        message: 'User added on ODC and status updated'
-        // data: jsonToURI(user)
-      });
     })
-    .catch(err => {
-      // handle the error
-      if (err) {
-        console.warn(err);
-        // TODO: Add some logging here
-      }
+    .then(() => {
+      // Check if email is there
+      const email = req.body.raw.email;
+      c_uid = 0;
+      mysqlDB = new Database({
+        host: process.env.MYSQLHOST || 'localhost',
+        user: process.env.MYSQLUSER || 'root',
+        password: process.env.MYSQLPASS || 'my-secret-pw',
+        database: process.env.MYSQLDATABASE || 'main'
+      });
+      mysqlDB
+        .query('SELECT c_uid FROM `m_member` WHERE c_email="' + email + '"')
+        .then(rows => {
+          console.log('1st query', rows);
+          c_uid = rows[0].c_uid;
+          return mysqlDB.query(
+            `UPDATE m_membership SET c_status = 4 WHERE c_member = ${c_uid}`
+          );
+        })
+        .then(
+          rows => {
+            console.log('2nd query', rows);
+            return mysqlDB.close();
+          },
+          err => {
+            return mysqlDB.close().then(() => {
+              throw err;
+            });
+          }
+        )
+        .then(() => {
+          // What happens with the local variables we made
+          /**
+           * Finds a user based on email and sets their status to active on the odc site
+           */
+          mongoose.connection.db.collection('users').updateOne(
+            { email: req.body.raw.email },
+            { $set: { isActiveOnWeb: true } },
+            function(err, result) {
+              if (err) {
+                console.error(err);
+              }
+              console.log('Updated the document with the field');
+            },
+            { upsert: true }
+          );
+
+          res.status(201).json({
+            message: 'User added on ODC and status updated'
+            // data: jsonToURI(user)
+          });
+        })
+        .catch(err => {
+          // handle the error
+          if (err) {
+            console.warn(err);
+            // TODO: Add some logging here
+          }
+        });
     });
 });
 // Send all other requests to the Angular app
@@ -185,7 +234,7 @@ function addODCUserOnSite(req, res) {
    */
   // Define what happens on successful data submission
   XHR.addEventListener('load', function(event) {
-    console.warn('Yeah! Data sent and response loaded.');
+    console.warn('Data send to ODC site for adding user');
   });
   // Define what happens in case of error
   XHR.addEventListener('error', function(event) {
@@ -218,7 +267,7 @@ function addNewUserToEmailList(req, res) {
    */
   // Define what happens on successful data submission
   XHR.addEventListener('load', function(event) {
-    console.warn('Yeah! Data sent and response loaded.');
+    console.warn('Data send to add user to pair list');
   });
   // Define what happens in case of error
   XHR.addEventListener('error', function(event) {

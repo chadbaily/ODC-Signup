@@ -111,7 +111,7 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
       uvaStudent: profile.uvaStudent,
       addrStreet: profile.addrStreet,
       addrCity: profile.addrCity,
-      addrZip: profile.addrZip,
+      addrZip: +profile.addrZip,
       addrState: profile.addrState,
       phoneNumber: profile.phoneNumber,
       hasAgreedToWaiver: profile.hasAgreedToWaiver,
