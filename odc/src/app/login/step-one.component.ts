@@ -3,17 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatStepper } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { EmailValidationModalComponent } from '../modals/email-validation-modal/email-validation-modal.component';
 import { DataAccessService } from '../dataAccess.service';
-
-interface ErrorContent {
-  status: string;
-  message: string;
-}
-
-interface Error {
-  error: ErrorContent;
-}
+import {
+  ErrorModalComponent,
+  Error
+} from '../modals/error-modal/error-modal.component';
 
 @Component({
   selector: 'app-step-one',
@@ -71,12 +65,10 @@ export class StepOneComponent implements OnInit {
     const email = this.firstFormGroup.get('email').value;
     // console.log('Email: ', email);
     this.http.post('/api/check-email', { email }).subscribe(result => {
-      // console.log(result);
       if (result) {
-        // console.log('Made it into result');
         if (result.hasOwnProperty('error')) {
           const errorResult = result as Error;
-          this.dialog.open(EmailValidationModalComponent, {
+          this.dialog.open(ErrorModalComponent, {
             width: '250px',
             data: errorResult.error.message
           });

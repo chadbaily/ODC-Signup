@@ -4,18 +4,9 @@ import { HttpClient } from '../../../node_modules/@angular/common/http';
 import { ActivateComponent } from '../activate/activate.component';
 import { MatDialog } from '../../../node_modules/@angular/material';
 import { DeleteUserModalComponent } from '../modals/delete-user-modal/delete-user-modal.component';
+import { ErrorModalComponent, Error } from '../modals/error-modal/error-modal.component';
 
-import { EmailValidationModalComponent } from '../modals/email-validation-modal/email-validation-modal.component';
 import { ConvertPerson } from './convert-person';
-
-interface ErrorContent {
-  status: string;
-  message: string;
-}
-
-interface Error {
-  error: ErrorContent;
-}
 
 @Component({
   selector: 'app-person-display',
@@ -46,7 +37,7 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
         // console.log('Made it into result');
         if (result.hasOwnProperty('error')) {
           const errorResult = result as Error;
-          this.dialog.open(EmailValidationModalComponent, {
+          this.dialog.open(ErrorModalComponent, {
             width: '250px',
             data: errorResult.error.message
           });

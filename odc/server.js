@@ -138,8 +138,6 @@ app.post('/api/check-email', (req, res) => {
 });
 
 app.post('/api/activate', (req, res) => {
-  // addODCUserOnSite(req, res);
-  // addNewUserToEmailList(req, res);
   addODCUser = new XMLPost('Outdoors at UVA');
   addODCUser
     .post(req.body.converted, 'http://www.outdoorsatuva.org/members/join', res)

@@ -16,7 +16,7 @@ import { ThankYouComponent } from './thank-you/thank-you.component';
 import { ActivateComponent } from './activate/activate.component';
 import { PersonDisplayComponent } from './person-display/person-display.component';
 import { DeleteUserModalComponent } from './modals/delete-user-modal/delete-user-modal.component';
-import { EmailValidationModalComponent } from './modals/email-validation-modal/email-validation-modal.component';
+import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
 import { StepOneComponent } from './login/step-one.component';
 import { StepTwoComponent } from './address/step-two.component';
 import { StepThreeComponent } from './waiver/step-three.component';
@@ -31,7 +31,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     ActivateComponent,
     PersonDisplayComponent,
     DeleteUserModalComponent,
-    EmailValidationModalComponent,
+    ErrorModalComponent,
     StepOneComponent,
     StepTwoComponent,
     StepThreeComponent,
@@ -50,7 +50,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     HttpClientModule
   ],
   providers: [DataAccessService],
-  entryComponents: [DeleteUserModalComponent, EmailValidationModalComponent],
+  entryComponents: [DeleteUserModalComponent, ErrorModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

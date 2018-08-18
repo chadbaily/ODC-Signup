@@ -4,6 +4,12 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { UserProfile, DataAccessService } from '../dataAccess.service';
+import { ConvertPerson } from '../person-display/convert-person';
+import {
+  ErrorModalComponent,
+  Error
+} from '../modals/error-modal/error-modal.component';
+import { MatDialog } from '@angular/material';
 
 declare let paypal: any;
 
@@ -11,7 +17,8 @@ declare let paypal: any;
   selector: 'app-step-four',
   templateUrl: './step-four.component.html'
 })
-export class StepFourComponent implements OnInit, AfterViewChecked {
+export class StepFourComponent extends ConvertPerson
+  implements OnInit, AfterViewChecked {
   public fourthFormGroup: FormGroup;
   public paypalLoad = true;
   public data: UserProfile;
@@ -49,9 +56,26 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then(payment => {
         this.createDataModel();
-        this.http
-          .post('/api/users', this.data)
-          .subscribe(() => console.log('Added User!'));
+        this.http.post('/api/users', this.data).subscribe(() => {
+          console.log('Added User!');
+          const personPayload: any = {
+            converted: this.convertPerson(this.data),
+            raw: this.data
+          };
+          this.http.post('/api/activate', personPayload).subscribe(result => {
+            if (result) {
+              // console.log('Made it into result');
+              if (result.hasOwnProperty('error')) {
+                const errorResult = result as Error;
+                this.dialog.open(ErrorModalComponent, {
+                  width: '250px',
+                  data: errorResult.error.message
+                });
+              }
+              console.log('Hit Activate');
+            }
+          });
+        });
         this.router.navigate(['thank-you']);
       });
     }
@@ -61,8 +85,11 @@ export class StepFourComponent implements OnInit, AfterViewChecked {
     private http: HttpClient,
     private router: Router,
     private formBuilder: FormBuilder,
-    private dataAccess: DataAccessService
-  ) {}
+    private dataAccess: DataAccessService,
+    public dialog: MatDialog
+  ) {
+    super();
+  }
 
   ngOnInit() {
     this.fourthFormGroup = this.formBuilder.group({
