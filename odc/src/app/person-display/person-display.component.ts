@@ -45,8 +45,8 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
             data: errorResult.error.message
           });
         }
-        this.parent.getAllUnactivePeople();
       }
+      this.parent.getAllUnactivePeople();
     });
   }
 
@@ -57,10 +57,10 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.http
-          .post('/api/deleteUser', this.person)
-          .subscribe(() => console.log('Person deleted'));
-        this.parent.getAllUnactivePeople();
+        this.http.post('/api/deleteUser', this.person).subscribe(() => {
+          console.log('Person deleted');
+          this.parent.getAllUnactivePeople();
+        });
       }
     });
   }
