@@ -114,10 +114,6 @@ export class StepTwoComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value))
     );
-
-    this.secondFormGroup
-      .get('birthDate')
-      .valueChanges.subscribe(value => console.log(value));
   }
 
   private _filter(value: string): string[] {
