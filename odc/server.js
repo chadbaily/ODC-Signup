@@ -143,7 +143,9 @@ app.post('/api/check-email', (req, res) => {
 app.post('/api/activate/subscribe', (req, res) => {
   addNewUserToEmailList(req, res)
     .then(() => addODCUserOnSite(req, res))
-    .catch(err => console.log('ERROR IN POST', err));
+    .catch(err => {
+      if (err) console.log('ERROR IN POST', err);
+    });
 });
 
 app.post('/api/activate', (req, res) => {
@@ -151,7 +153,7 @@ app.post('/api/activate', (req, res) => {
   // Check if email is there
   const email = req.body.raw.email;
   c_uid = 0;
-  var mysqlDB = new Database({
+  mysqlDB = new Database({
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASS || 'my-secret-pw',

@@ -35,21 +35,19 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
       converted: this.convertPerson(this.person),
       raw: this.person
     };
-    this.http
-      .post('/api/activate', personPayload)
-      .subscribe(result => {
-        if (result) {
-          // console.log('Made it into result');
-          if (result.hasOwnProperty('error')) {
-            const errorResult = result as Error;
-            this.dialog.open(ErrorModalComponent, {
-              width: '250px',
-              data: errorResult.error.message
-            });
-          }
+    this.http.post('/api/activate', personPayload).subscribe(result => {
+      if (result) {
+        // console.log('Made it into result');
+        if (result.hasOwnProperty('error')) {
+          const errorResult = result as Error;
+          this.dialog.open(ErrorModalComponent, {
+            width: '250px',
+            data: errorResult.error.message
+          });
         }
-      });
-    this.parent.getAllUnactivePeople();
+        this.parent.getAllUnactivePeople();
+      }
+    });
   }
 
   delete() {
