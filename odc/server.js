@@ -142,7 +142,13 @@ app.post('/api/check-email', (req, res) => {
 
 app.post('/api/activate/subscribe', (req, res) => {
   addNewUserToEmailList(req, res)
-    .then(() => addODCUserOnSite(req, res))
+    .then(() =>
+      addODCUserOnSite(req, res).then(() => {
+        res.status(201).json({
+          message: 'Subscribed!!'
+        });
+      })
+    )
     .catch(err => {
       if (err) console.log('ERROR IN POST', err);
     });

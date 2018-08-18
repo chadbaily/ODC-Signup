@@ -65,6 +65,7 @@ export class StepFourComponent extends ConvertPerson
           this.http
             .post('/api/activate/subscribe', personPayload)
             .subscribe(result => {
+              console.log('Subscribe', result);
               if (result) {
                 // console.log('Made it into result');
                 if (result.hasOwnProperty('error')) {
@@ -74,24 +75,25 @@ export class StepFourComponent extends ConvertPerson
                     data: errorResult.error.message
                   });
                 }
-                this.http
-                  .post('/api/activate', personPayload)
-                  .subscribe(response => {
-                    if (response) {
-                      // console.log('Made it into result');
-                      if (response.hasOwnProperty('error')) {
-                        const errorResult = response as Error;
-                        this.dialog.open(ErrorModalComponent, {
-                          width: '250px',
-                          data: errorResult.error.message
-                        });
-                      }
-                    }
-                  });
               }
+              this.http
+                .post('/api/activate', personPayload)
+                .subscribe(response => {
+                  console.log('activate', response);
+                  if (response) {
+                    // console.log('Made it into result');
+                    if (response.hasOwnProperty('error')) {
+                      const errorResult = response as Error;
+                      this.dialog.open(ErrorModalComponent, {
+                        width: '250px',
+                        data: errorResult.error.message
+                      });
+                    }
+                  }
+                });
             });
+          this.router.navigate(['thank-you']);
         });
-        this.router.navigate(['thank-you']);
       });
     }
   };
