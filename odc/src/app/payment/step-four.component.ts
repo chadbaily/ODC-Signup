@@ -62,19 +62,34 @@ export class StepFourComponent extends ConvertPerson
             converted: this.convertPerson(this.data),
             raw: this.data
           };
-          // this.http.post('/api/activate', personPayload).subscribe(result => {
-          //   if (result) {
-          //     // console.log('Made it into result');
-          //     if (result.hasOwnProperty('error')) {
-          //       const errorResult = result as Error;
-          //       this.dialog.open(ErrorModalComponent, {
-          //         width: '250px',
-          //         data: errorResult.error.message
-          //       });
-          //     }
-          //     console.log('Hit Activate');
-          //   }
-          // });
+          this.http
+            .post('/api/activate/subscribe', personPayload)
+            .subscribe(result => {
+              if (result) {
+                // console.log('Made it into result');
+                if (result.hasOwnProperty('error')) {
+                  const errorResult = result as Error;
+                  this.dialog.open(ErrorModalComponent, {
+                    width: '250px',
+                    data: errorResult.error.message
+                  });
+                }
+                this.http
+                  .post('/api/activate', personPayload)
+                  .subscribe(response => {
+                    if (response) {
+                      // console.log('Made it into result');
+                      if (response.hasOwnProperty('error')) {
+                        const errorResult = response as Error;
+                        this.dialog.open(ErrorModalComponent, {
+                          width: '250px',
+                          data: errorResult.error.message
+                        });
+                      }
+                    }
+                  });
+              }
+            });
         });
         this.router.navigate(['thank-you']);
       });
