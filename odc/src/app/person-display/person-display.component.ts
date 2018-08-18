@@ -4,7 +4,10 @@ import { HttpClient } from '../../../node_modules/@angular/common/http';
 import { ActivateComponent } from '../activate/activate.component';
 import { MatDialog } from '../../../node_modules/@angular/material';
 import { DeleteUserModalComponent } from '../modals/delete-user-modal/delete-user-modal.component';
-import { ErrorModalComponent, Error } from '../modals/error-modal/error-modal.component';
+import {
+  ErrorModalComponent,
+  Error
+} from '../modals/error-modal/error-modal.component';
 
 import { ConvertPerson } from './convert-person';
 
@@ -32,18 +35,20 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
       converted: this.convertPerson(this.person),
       raw: this.person
     };
-    this.http.post('/api/activate', personPayload).subscribe(result => {
-      if (result) {
-        // console.log('Made it into result');
-        if (result.hasOwnProperty('error')) {
-          const errorResult = result as Error;
-          this.dialog.open(ErrorModalComponent, {
-            width: '250px',
-            data: errorResult.error.message
-          });
+    this.http
+      .post('/api/activate', personPayload)
+      .subscribe(result => {
+        if (result) {
+          // console.log('Made it into result');
+          if (result.hasOwnProperty('error')) {
+            const errorResult = result as Error;
+            this.dialog.open(ErrorModalComponent, {
+              width: '250px',
+              data: errorResult.error.message
+            });
+          }
         }
-      }
-    });
+      });
     this.parent.getAllUnactivePeople();
   }
 
