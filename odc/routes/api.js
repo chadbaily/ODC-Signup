@@ -37,8 +37,17 @@ router.get('/', (req, res) => {
 });
 
 /* GET all unactive users. */
-router.get('/users', (req, res) => {
+router.get('/users/unactive', (req, res) => {
   User.find({ isActiveOnWeb: false }, (err, users) => {
+    if (err) res.status(500).send(error);
+
+    res.status(200).json(users);
+  });
+});
+
+/* GET all  users. */
+router.get('/users/', (req, res) => {
+  User.find({}, (err, users) => {
     if (err) res.status(500).send(error);
 
     res.status(200).json(users);

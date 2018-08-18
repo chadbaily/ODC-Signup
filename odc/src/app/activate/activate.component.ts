@@ -23,11 +23,19 @@ export class ActivateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllPeople();
+    this.getAllUnactivePeople();
   }
   // Get all users from the API
   getAllPeople() {
     this.http.get('/api/users').subscribe(people => {
+      this.people.next(<UserProfile>people);
+      console.log(this.people.getValue());
+    });
+  }
+
+  // Get unactive people
+  getAllUnactivePeople() {
+    this.http.get('/api/users/unactive').subscribe(people => {
       this.people.next(<UserProfile>people);
       console.log(this.people.getValue());
     });
