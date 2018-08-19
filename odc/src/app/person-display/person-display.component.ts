@@ -38,7 +38,7 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
     this.http
       .post('/api/activate/subscribe', personPayload)
       .subscribe(result => {
-        console.log('Subscribe', result);
+        // console.log('Subscribe', result);
         if (result) {
           // console.log('Made it into result');
           if (result.hasOwnProperty('error')) {
@@ -50,7 +50,7 @@ export class PersonDisplayComponent extends ConvertPerson implements OnInit {
           }
         }
         this.http.post('/api/activate', personPayload).subscribe(response => {
-          console.log('Activate', response);
+          // console.log('Activate', response);
           if (response) {
             // console.log('Made it into result');
             if (response.hasOwnProperty('error')) {

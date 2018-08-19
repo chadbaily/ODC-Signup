@@ -65,7 +65,7 @@ export class StepFourComponent extends ConvertPerson
           this.http
             .post('/api/activate/subscribe', personPayload)
             .subscribe(result => {
-              console.log('Subscribe', result);
+              // console.log('Subscribe', result);
               if (result) {
                 // console.log('Made it into result');
                 if (result.hasOwnProperty('error')) {
@@ -79,7 +79,7 @@ export class StepFourComponent extends ConvertPerson
               this.http
                 .post('/api/activate', personPayload)
                 .subscribe(response => {
-                  console.log('activate', response);
+                  // console.log('activate', response);
                   if (response) {
                     // console.log('Made it into result');
                     if (response.hasOwnProperty('error')) {

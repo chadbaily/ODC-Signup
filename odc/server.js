@@ -260,9 +260,12 @@ function addODCUserOnSite(req, res) {
         if (XHR.status === 200) {
           console.log('Added user on odc site');
           resolve();
-        } else {
+        }
+        if (XHR.status === 500) {
           reject(event);
+        } else {
           console.log('Error', XHR.statusText);
+          resolve();
         }
       }
     };
@@ -311,11 +314,14 @@ function addNewUserToEmailList(req, res) {
     XHR.onreadystatechange = function(event) {
       if (XHR.readyState === 4) {
         if (XHR.status === 200) {
-          resolve();
           console.log('Subscribed user to mass email');
-        } else {
+          resolve();
+        }
+        if (XHR.status === 500) {
           reject(event);
+        } else {
           console.log('Error', XHR.statusText);
+          resolve();
         }
       }
     };

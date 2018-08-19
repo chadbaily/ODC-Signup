@@ -43,6 +43,9 @@ docker system prune -
 
 
 Deploy to heroku
+
+IF ITS NOT WORKING MAKE SURE dockerfile => Dockerfile
+
 heroku container:push web
 heroku container:release web
 
