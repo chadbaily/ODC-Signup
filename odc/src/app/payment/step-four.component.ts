@@ -31,7 +31,7 @@ export class StepFourComponent extends ConvertPerson
   private addScript = false;
 
   private paypalConfig = {
-    env: 'sandbox',
+    env: 'production',
     client: {
       sandbox:
         'ASsvtSXZ-ArchEyp6Xc_1NvCwWScYS-Yr9Irf6zksGZC10k3x2WyO_smWlg2rz3DWjN-9GkLiksWyHZ_',
