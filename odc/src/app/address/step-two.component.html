@@ -57,21 +57,22 @@
 
 
     <mat-form-field class="odc-full-width col-sm-4">
-      <input type="text" placeholder="State" aria-label="Number" matInput formControlName="state" [matAutocomplete]="auto" required>
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      <mat-select type="text" placeholder="State" aria-label="Number" matInput formControlName="state" required>
+        <mat-option *ngFor="let option of stateOptions" [value]="option">
           {{option}}
         </mat-option>
-      </mat-autocomplete>
+      </mat-select>
       <mat-error *ngIf="secondFormGroup.get('state').hasError('required')">Please select a state</mat-error>
-      <mat-error *ngIf="secondFormGroup.get('state').hasError('minLength') || secondFormGroup.get('state').hasError('maxLength')">Please use state abbreviation</mat-error>
+      <mat-error *ngIf="secondFormGroup.get('state').hasError('minLength') || secondFormGroup.get('state').hasError('maxLength')">Please
+        use state abbreviation</mat-error>
     </mat-form-field>
 
     <mat-form-field class="odc-full-width col-sm-4">
       <input type="text" matInput #postalCode placeholder="Postal Code" formControlName="zip" required>
       <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
       <mat-error *ngIf="secondFormGroup.get('zip').hasError('required')">Please enter a zipcode</mat-error>
-      <mat-error *ngIf="secondFormGroup.get('zip').hasError('minLength') || secondFormGroup.get('zip').hasError('maxLength')">Please enter 5 digit zipcode</mat-error>
+      <mat-error *ngIf="secondFormGroup.get('zip').hasError('minLength') || secondFormGroup.get('zip').hasError('maxLength')">Please
+        enter 5 digit zipcode</mat-error>
     </mat-form-field>
   </div>
 

@@ -47,3 +47,7 @@ table {
 .mat-horizontal-stepper-header {
   pointer-events: none !important;
 }
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
