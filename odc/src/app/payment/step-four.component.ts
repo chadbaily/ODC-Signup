@@ -19,6 +19,7 @@ declare let paypal: any;
 })
 export class StepFourComponent extends ConvertPerson
   implements OnInit, AfterViewChecked {
+  public isCash = this.router.url === '/signup/cash' ? true : false;
   public fourthFormGroup: FormGroup;
   public paypalLoad = true;
   public data: UserProfile;
@@ -28,7 +29,8 @@ export class StepFourComponent extends ConvertPerson
     { value: '50', viewValue: 'Yearly (12-month) Membership ($50)' }
   ];
   // private API = this.dataAccess.API;
-  private addScript = false;
+  // Set this to if we are doing a cash transaction or not
+  private addScript = this.isCash;
 
   private paypalConfig = {
     env: 'production',
@@ -55,45 +57,7 @@ export class StepFourComponent extends ConvertPerson
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then(payment => {
-        this.createDataModel();
-        this.http.post('/api/users', this.data).subscribe(() => {
-          console.log('Added User!');
-          const personPayload: any = {
-            converted: this.convertPerson(this.data),
-            raw: this.data
-          };
-          this.http
-            .post('/api/activate/subscribe', personPayload)
-            .subscribe(result => {
-              // console.log('Subscribe', result);
-              if (result) {
-                // console.log('Made it into result');
-                if (result.hasOwnProperty('error')) {
-                  const errorResult = result as Error;
-                  this.dialog.open(ErrorModalComponent, {
-                    width: '250px',
-                    data: errorResult.error.message
-                  });
-                }
-              }
-              this.http
-                .post('/api/activate', personPayload)
-                .subscribe(response => {
-                  // console.log('activate', response);
-                  if (response) {
-                    // console.log('Made it into result');
-                    if (response.hasOwnProperty('error')) {
-                      const errorResult = response as Error;
-                      this.dialog.open(ErrorModalComponent, {
-                        width: '250px',
-                        data: errorResult.error.message
-                      });
-                    }
-                  }
-                });
-            });
-          this.router.navigate(['thank-you']);
-        });
+        this.createAndSubscribeMember();
       });
     }
   };
@@ -108,10 +72,29 @@ export class StepFourComponent extends ConvertPerson
     super();
   }
 
+  public cashBypass() {
+    const bypassVal = this.fourthFormGroup.get('passphrase').value;
+    if (bypassVal === '?4P2v2}b8dw2w}') {
+      this.createAndSubscribeMember();
+    } else {
+      this.dialog.open(ErrorModalComponent, {
+        width: '250px',
+        data: 'Invalid Password :('
+      });
+    }
+  }
+
   ngOnInit() {
-    this.fourthFormGroup = this.formBuilder.group({
-      plan: [null, Validators.required]
-    });
+    if (this.isCash) {
+      this.fourthFormGroup = this.formBuilder.group({
+        plan: [null, Validators.required],
+        passphrase: [null, Validators.required]
+      });
+    } else {
+      this.fourthFormGroup = this.formBuilder.group({
+        plan: [null, Validators.required]
+      });
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -166,6 +149,46 @@ export class StepFourComponent extends ConvertPerson
       },
       isActiveOnWeb: false
     };
-    console.log(this.dataAccess.userProfile$.getValue());
+    // console.log(this.dataAccess.userProfile$.getValue());
+  }
+
+  private createAndSubscribeMember() {
+    this.createDataModel();
+    this.http.post('/api/users', this.data).subscribe(() => {
+      // console.log('Added User!');
+      const personPayload: any = {
+        converted: this.convertPerson(this.data),
+        raw: this.data
+      };
+      this.http
+        .post('/api/activate/subscribe', personPayload)
+        .subscribe(result => {
+          // console.log('Subscribe', result);
+          if (result) {
+            // console.log('Made it into result');
+            if (result.hasOwnProperty('error')) {
+              const errorResult = result as Error;
+              this.dialog.open(ErrorModalComponent, {
+                width: '250px',
+                data: errorResult.error.message
+              });
+            }
+          }
+          this.http.post('/api/activate', personPayload).subscribe(response => {
+            // console.log('activate', response);
+            if (response) {
+              // console.log('Made it into result');
+              if (response.hasOwnProperty('error')) {
+                const errorResult = response as Error;
+                this.dialog.open(ErrorModalComponent, {
+                  width: '250px',
+                  data: errorResult.error.message
+                });
+              }
+            }
+          });
+        });
+      this.router.navigate(['thank-you']);
+    });
   }
 }

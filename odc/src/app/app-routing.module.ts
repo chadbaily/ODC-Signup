@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'thank-you', component: ThankYouComponent },
   { path: 'activate', component: ActivateComponent },
+  { path: 'signup/cash', component: SignupComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 
