@@ -49,6 +49,10 @@ IF ITS NOT WORKING MAKE SURE dockerfile => Dockerfile
 heroku container:push web
 heroku container:release web
 
+Mac:
+heroku container:push web --app outdoors-at-uva-signup
+heroku container:release web --app outdoors-at-uva-signup
+
 
 SELECT c_uid FROM `m_member` WHERE c_email=
 UPDATE `m_membership` SET `c_status` = 4 WHERE `c_member`=
