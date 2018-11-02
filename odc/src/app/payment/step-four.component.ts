@@ -74,7 +74,7 @@ export class StepFourComponent extends ConvertPerson
 
   public cashBypass() {
     const bypassVal = this.fourthFormGroup.get('passphrase').value;
-    if (bypassVal === '86$FJc[@78Bq3p') {
+    if (bypassVal === 'p3{2WdiHGyCZeN8v67Ep') {
       this.createAndSubscribeMember();
     } else {
       this.dialog.open(ErrorModalComponent, {
